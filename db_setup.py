@@ -6,8 +6,8 @@ This code creates the  database  by completing the tasks below;
 
 '''
 
-### Create the sqlite database and map python objects
-## Configuration: import all modules needed
+# Create the sqlite database and map python objects
+# Configuration: import all modules needed
 import os
 import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
@@ -15,41 +15,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from model import Base, Album, Artist
 
-## Configuration: Create instance of declarative base (class code will inherit this)
-Base = declarative_base()
-
-
-##Class: Representation of table as a python class, extends the Base class
-class Artist(Base):
-    __tablename__ = 'artist'  # Table in the database
-
-    # Mapper: Maps python objects to columns in the database
-    id = Column(Integer, primary_key=True) #auto incremented
-    name = Column(String(80), nullable=False)
-    #genre = Column(String(20), nullable=False)
-
-
-class Album(Base):
-    __tablename__ = 'album'
-
-    name = Column(String(80), nullable=False)
-    id = Column(Integer, primary_key=True) #auto incremented
-    #artist_id = Column(String(50),nullable=False)
-    date = Column(Integer,nullable=False)
-
-    artist_id = Column(Integer, ForeignKey('artist.id'))
-    artist = relationship(Artist)
-
-
-## Configuration: Create the database and tables
+# Configuration: Create the database and tables
 engine = create_engine('sqlite:///spotify.db')
 Base.metadata.create_all(engine)
 
-## Function to populate data
+
 def populateData():
-    ### Populate starter data in the database
-    ## Bind the engine to the metadata of the Base class (enables declaratives to be accessed through a DBSession instance)
+    # Populate starter data in the database
+    # Bind the engine to the metadata of the Base class (enables declaratives to be accessed through a DBSession instance)
     Base.metadata.bind = engine
 
     DBSession = sessionmaker(bind=engine)
@@ -60,7 +35,7 @@ def populateData():
     # you can revert all of them back to the last commit by calling session.rollback()
     session = DBSession()
 
-    ## Initial artists and albums. #TO BE REPLACED with spotify API json 
+    # Initial artists and albums. #TO BE REPLACED with spotify API json
 
     artist1 = Artist(name="Lana Del Rey")
 
@@ -68,22 +43,22 @@ def populateData():
     session.commit()
 
     album1 = Album(name="Ultraviolence",
-                    date=2014,
-                    artist_id= artist1.id, artist=artist1)
+                   date=2014,
+                   artist_id=artist1.id, artist=artist1)
 
     session.add(album1)
     session.commit()
 
     album2 = Album(name="Honeymoon",
-                    date=2015,
-                    artist_id= artist1.id, artist=artist1)
+                   date=2015,
+                   artist_id=artist1.id, artist=artist1)
 
     session.add(album2)
     session.commit()
 
     album3 = Album(name="Norman Fucking Rockwell!",
-                    date=2019,
-                    artist_id= artist1.id, artist=artist1)
+                   date=2019,
+                   artist_id=artist1.id, artist=artist1)
 
     session.add(album3)
     session.commit()
@@ -94,27 +69,27 @@ def populateData():
     session.commit()
 
     album4 = Album(name="A Different Kind of Human (Step 2)",
-                    date=2018,
-                    artist_id= artist2.id, artist=artist2)
+                   date=2018,
+                   artist_id=artist2.id, artist=artist2)
 
     session.add(album4)
     session.commit()
 
     album5 = Album(name="Infections of a Different Kind (Step 1)",
-                    date=2019,
-                    artist_id= artist2.id, artist=artist2)
+                   date=2019,
+                   artist_id=artist2.id, artist=artist2)
 
     session.add(album5)
     session.commit()
 
     album6 = Album(name="All My Demons Greeting Me as a Friend",
-                    date=2016,
-                    artist_id= artist2.id, artist=artist2)
+                   date=2016,
+                   artist_id=artist2.id, artist=artist2)
 
     session.add(album6)
     session.commit()
 
 
-## If the script is directly executed, populate data in tables
+# If the script is directly executed, populate data in tables
 if __name__ == '__main__':
     populateData()
