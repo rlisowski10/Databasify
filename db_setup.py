@@ -10,12 +10,13 @@ This code creates the  database  by completing the tasks below;
 # Configuration: import all modules needed
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Table, Column, ForeignKey, Integer, String, DateTime, Text, Float, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import Base, Album, Artist
+from model import Base, Album, Artist, Playlist, Song, User
+import datetime
 
 # Configuration: Create the database and tables
 engine = create_engine('sqlite:///spotify.db')
@@ -35,58 +36,48 @@ def populateData():
     # you can revert all of them back to the last commit by calling session.rollback()
     session = DBSession()
 
-    # Initial artists and albums. #TO BE REPLACED with spotify API json
+    #Initial dummy  data. #TO BE REPLACED with spotify API json
 
-    artist1 = Artist(name="Lana Del Rey")
+    user1= User(email="kaan@kaan.ca", password="1234")
+    user2= User(email="ryan@ryan.ca", password="1234")
+    user3= User(email="paul@paul.ca", password="1234")
+    session.add(user1)
+    session.add(user2)
+    session.add(user3)
+    session.commit()
 
+    artist1 = Artist(name="Purity Ring", uri="dummy", followers=1)
     session.add(artist1)
     session.commit()
 
-    album1 = Album(name="Ultraviolence",
-                   date=2014,
-                   artist_id=artist1.id, artist=artist1)
-
+    album1 = Album(name="Another Eternity",
+                    uri = "dummyuri",
+                    release_date=datetime.datetime.utcnow(),
+                    artist_id=artist1.id, artist=artist1)
     session.add(album1)
     session.commit()
 
-    album2 = Album(name="Honeymoon",
-                   date=2015,
-                   artist_id=artist1.id, artist=artist1)
+    # song1 = Song(uri="dummyuri",track_number=1,name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0)
+    # session.add(song1)
+    # session.commit()
 
-    session.add(album2)
+    plist1=Playlist(name="kaans playlist", user_id=user1.id, user=user1)
+    session.add(plist1)
     session.commit()
 
-    album3 = Album(name="Norman Fucking Rockwell!",
-                   date=2019,
-                   artist_id=artist1.id, artist=artist1)
-
-    session.add(album3)
-    session.commit()
-
-    artist2 = Artist(name="Aurora")
-
-    session.add(artist1)
-    session.commit()
-
-    album4 = Album(name="A Different Kind of Human (Step 2)",
-                   date=2018,
-                   artist_id=artist2.id, artist=artist2)
-
-    session.add(album4)
-    session.commit()
-
-    album5 = Album(name="Infections of a Different Kind (Step 1)",
-                   date=2019,
-                   artist_id=artist2.id, artist=artist2)
-
-    session.add(album5)
-    session.commit()
-
-    album6 = Album(name="All My Demons Greeting Me as a Friend",
-                   date=2016,
-                   artist_id=artist2.id, artist=artist2)
-
-    session.add(album6)
+    song_objects = [
+        Song(uri="dummyuri",track_number=1,name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=2,name="Bodyache", popularity=100, duration=179000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=3,name="Push Pull", popularity=100, duration=169000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=4,name="Repetition", popularity=100, duration=159000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=5,name="Stranger than Earth", popularity=100, duration=149000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=6,name="Begin Again", popularity=100, duration=139000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=7,name="Dust Hymn", popularity=100, duration=129000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=1),
+        Song(uri="dummyuri",track_number=8,name="Flood on the Floor", popularity=100, duration=119000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=9,name="Sea Castle", popularity=100, duration=144000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri",track_number=10,name="Stillness in Woe", popularity=100, duration=155000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0)      
+    ]
+    session.add_all(song_objects)
     session.commit()
 
 

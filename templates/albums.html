@@ -26,13 +26,12 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">
                 <h1>Hello Databasify!</h1>
-                <p>Yes.</p>
+                <p>Albums for artist: {{artistName.name}}</p>
                 <table class="table">
                     <thead class="thead-light">
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">Album ID</th>
                             <th scope="col">Album Name</th>
-                            <th scope="col">Artist Name</th>
                             <th scope="col">Release Date</th>
                         </tr>
                     </thead>
@@ -40,9 +39,9 @@
                         {% for album in albums %}
                         <tr>
                             <th scope="row">{{album.id}}</th>
-                            <td ><a href="/albums/{{ album.id }}">{{album.name}}</a></td>
-                            <td><a href="/artists/{{ album.artist.id }}">{{album.artist.name}}</a></td>
+                            <td >{{album.name}}</td>
                             <td>{{album.release_date}}</td>
+                            
                         </tr>
                         
                         {% endfor %}
