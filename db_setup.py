@@ -17,13 +17,133 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User
 import datetime
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+# Note that Spotify credentials (Client ID and Client Secret) should be added as System Variables.
+# Client ID as SPOTIPY_CLIENT_ID and Client Secret as SPOTIPY_CLIENT_SECRET
 
 # Configuration: Create the database and tables
 engine = create_engine('sqlite:///spotify.db')
 Base.metadata.create_all(engine)
 
+# Create a Spotify object using Spotify developer credentials.
+sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
-def populateData():
+
+def spotifyAPITest():
+    """Tests against the spotify API to confirm connection.
+    """
+    # print(os.environ.get('SPOTIPY_CLIENT_ID'))
+    results = sp.search(q='weezer', limit=20)
+
+    for idx, track in enumerate(results['tracks']['items']):
+        print(idx, track['name'])
+
+
+def populateArtist(session, artist_name, album_name):
+    """Populates the artist database table with data from the Spotify API.
+
+    Keyword arguments:
+    session -- the database session.
+    artist_name -- the name of the artist to search for.
+    album_name -- the name of the album to search for.
+    """
+    album_result = sp.search(q='artist:' + artist_name + ' album:'
+                             + album_name, type='album')
+    album = sp.album(album_result['albums']['items'][0]['uri'])
+    artist = sp.artist(album['artists'][0]['uri'])
+
+    # Populate artist information based on the album search.
+    # TODO: Implement code to deal with an existing artist.
+    artist_db_obj = Artist(name=artist['name'],
+                           uri=artist['uri'],
+                           followers=artist['popularity'])
+    session.add(artist_db_obj)
+    session.commit()
+
+    populateAlbum(session, artist_db_obj, album)
+
+
+def populateAlbum(session, artist_db_obj, album):
+    """Populates the album database table with data from the Spotify API.
+
+    Keyword arguments:
+    session -- the database session.
+    artist_db_obj -- the artist database object.
+    album -- the album object containing Spotify data.
+    """
+    # Populate album information based on the album search.
+    release_date = album['release_date'].split('-')
+    release_date = datetime.datetime(int(release_date[0]),
+                                     int(release_date[1]),
+                                     int(release_date[2]))
+    album_db_obj = Album(name=album['name'],
+                         uri=album['uri'],
+                         release_date=release_date,
+                         artist_id=artist_db_obj.id, artist=artist_db_obj)
+    session.add(album_db_obj)
+    session.commit()
+
+    populateSongs(session, album_db_obj, album)
+
+
+def populateSongs(session, album_db_obj, album):
+    """Populates the song database table with data from the Spotify API.
+
+    Keyword arguments:
+    session -- the database session.
+    album_db_obj -- the album database object.
+    album -- the album object containing Spotify data.
+    """
+    song_objects = []
+
+    # Populate album information based on the album search.
+    for track in album['tracks']['items']:
+        track_info = sp.track(track['uri'])
+        track_features = sp.audio_features(track['id'])[0]
+
+        song = Song(uri=track_info['uri'],
+                    track_number=track_info['track_number'],
+                    name=track_info['name'],
+                    popularity=track_info['popularity'],
+                    duration=track_info['duration_ms'],
+                    explicit=track_info['explicit'],
+                    danceability=track_features['danceability'],
+                    tempo=track_features['tempo'],
+                    energy=track_features['energy'],
+                    instrumentalness=track_features['instrumentalness'],
+                    time_signature=track_features['time_signature'],
+                    valence=track_features['valence'],
+                    album_id=album_db_obj.id,
+                    album=album_db_obj,
+                    playlist_id=0)
+        song_objects.append(song)
+
+    session.add_all(song_objects)
+    session.commit()
+
+
+def populateDataFromSpotify():
+    """Populates the database tables with data from the Spotify API.
+    """
+    # Connects to SQLite Database
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
+    # Add all albums to be included in the database instance.
+    populate_albums = []
+    populate_albums.append(('tv on the radio', 'dear science'))
+    populate_albums.append(('purity ring', 'shrines'))
+    populate_albums.append(('st vincent', 'masseduction'))
+
+    for album in populate_albums:
+        populateArtist(session, album[0], album[1])
+
+
+def populateDataManually():
+    """Populates the database tables with dummy data.
+    """
     # Populate starter data in the database
     # Bind the engine to the metadata of the Base class (enables declaratives to be accessed through a DBSession instance)
     Base.metadata.bind = engine
@@ -36,11 +156,11 @@ def populateData():
     # you can revert all of them back to the last commit by calling session.rollback()
     session = DBSession()
 
-    #Initial dummy  data. #TO BE REPLACED with spotify API json
+    # Initial dummy  data. #TO BE REPLACED with spotify API json
 
-    user1= User(email="kaan@kaan.ca", password="1234")
-    user2= User(email="ryan@ryan.ca", password="1234")
-    user3= User(email="paul@paul.ca", password="1234")
+    user1 = User(email="kaan@kaan.ca", password="1234")
+    user2 = User(email="ryan@ryan.ca", password="1234")
+    user3 = User(email="paul@paul.ca", password="1234")
     session.add(user1)
     session.add(user2)
     session.add(user3)
@@ -51,9 +171,9 @@ def populateData():
     session.commit()
 
     album1 = Album(name="Another Eternity",
-                    uri = "dummyuri",
-                    release_date=datetime.datetime.utcnow(),
-                    artist_id=artist1.id, artist=artist1)
+                   uri="dummyuri",
+                   release_date=datetime.datetime.utcnow(),
+                   artist_id=artist1.id, artist=artist1)
     session.add(album1)
     session.commit()
 
@@ -61,21 +181,31 @@ def populateData():
     # session.add(song1)
     # session.commit()
 
-    plist1=Playlist(name="kaans playlist", user_id=user1.id, user=user1)
+    plist1 = Playlist(name="kaans playlist", user_id=user1.id, user=user1)
     session.add(plist1)
     session.commit()
 
     song_objects = [
-        Song(uri="dummyuri",track_number=1,name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=2,name="Bodyache", popularity=100, duration=179000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=3,name="Push Pull", popularity=100, duration=169000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=4,name="Repetition", popularity=100, duration=159000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=5,name="Stranger than Earth", popularity=100, duration=149000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=6,name="Begin Again", popularity=100, duration=139000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=7,name="Dust Hymn", popularity=100, duration=129000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=1),
-        Song(uri="dummyuri",track_number=8,name="Flood on the Floor", popularity=100, duration=119000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=9,name="Sea Castle", popularity=100, duration=144000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
-        Song(uri="dummyuri",track_number=10,name="Stillness in Woe", popularity=100, duration=155000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0)      
+        Song(uri="dummyuri", track_number=1, name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=2, name="Bodyache", popularity=100, duration=179000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=3, name="Push Pull", popularity=100, duration=169000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=4, name="Repetition", popularity=100, duration=159000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=5, name="Stranger than Earth", popularity=100, duration=149000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=6, name="Begin Again", popularity=100, duration=139000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=7, name="Dust Hymn", popularity=100, duration=129000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=1),
+        Song(uri="dummyuri", track_number=8, name="Flood on the Floor", popularity=100, duration=119000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=9, name="Sea Castle", popularity=100, duration=144000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+        Song(uri="dummyuri", track_number=10, name="Stillness in Woe", popularity=100, duration=155000, danceability=1.0, explicit=False,
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0)
     ]
     session.add_all(song_objects)
     session.commit()
@@ -83,4 +213,8 @@ def populateData():
 
 # If the script is directly executed, populate data in tables
 if __name__ == '__main__':
-    populateData()
+    # populateDataManually()
+    # spotifyAPITest()
+    populateDataFromSpotify()
+
+    print("Database populated successfully")
