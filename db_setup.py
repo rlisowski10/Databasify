@@ -132,6 +132,8 @@ def populateDataFromSpotify():
     session = DBSession()
 
     # Add all albums to be included in the database instance.
+    # Currently, adding more than one album from the same artist creates
+    # duplicate artists. This will have to be dealt with.
     populate_albums = []
     populate_albums.append(('tv on the radio', 'dear science'))
     populate_albums.append(('purity ring', 'shrines'))
