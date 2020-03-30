@@ -33,7 +33,7 @@ sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 def spotifyAPITest():
     """Tests against the spotify API to confirm connection.
     """
-    # print(os.environ.get('SPOTIPY_CLIENT_ID'))
+    print(os.environ.get('SPOTIPY_CLIENT_ID'))
     results = sp.search(q='weezer', limit=20)
 
     for idx, track in enumerate(results['tracks']['items']):
@@ -135,9 +135,16 @@ def populateDataFromSpotify():
     # Currently, adding more than one album from the same artist creates
     # duplicate artists. This will have to be dealt with.
     populate_albums = []
-    populate_albums.append(('tv on the radio', 'dear science'))
-    populate_albums.append(('purity ring', 'shrines'))
     populate_albums.append(('st vincent', 'masseduction'))
+    populate_albums.append(('air', 'moon safari'))
+    populate_albums.append(('wilco', 'yankee hotel foxtrot'))
+    populate_albums.append(('stone roses', 'stone roses'))
+    populate_albums.append(('run the jewels', 'run the jewels 2'))
+    populate_albums.append(('lana del rey', 'norman fucking rockwell!'))
+    populate_albums.append(('caribou', 'andorra'))
+    populate_albums.append(('daft punk', 'random access memories'))
+    populate_albums.append(('dan deacon', 'mystic familiar'))
+    populate_albums.append(('cut copy', 'in ghost colours'))
 
     for album in populate_albums:
         populateArtist(session, album[0], album[1])
