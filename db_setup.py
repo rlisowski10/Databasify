@@ -15,7 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import Base, Album, Artist, Playlist, Song, User
+from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import datetime
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -115,8 +115,7 @@ def populateSongs(session, album_db_obj, album):
                     time_signature=track_features['time_signature'],
                     valence=track_features['valence'],
                     album_id=album_db_obj.id,
-                    album=album_db_obj,
-                    playlist_id=0)
+                    album=album_db_obj)
         song_objects.append(song)
 
     session.add_all(song_objects)
@@ -135,6 +134,7 @@ def populateDataFromSpotify():
     # Currently, adding more than one album from the same artist creates
     # duplicate artists. This will have to be dealt with.
     populate_albums = []
+    #Ryan
     populate_albums.append(('st vincent', 'masseduction'))
     populate_albums.append(('air', 'moon safari'))
     populate_albums.append(('wilco', 'yankee hotel foxtrot'))
@@ -145,6 +145,18 @@ def populateDataFromSpotify():
     populate_albums.append(('daft punk', 'random access memories'))
     populate_albums.append(('dan deacon', 'mystic familiar'))
     populate_albums.append(('cut copy', 'in ghost colours'))
+    #Kaan
+    populate_albums.append(('iamx', 'metanoia'))
+    populate_albums.append(('kim petras', 'turn off the light'))
+    populate_albums.append(('allie x', 'cape god'))
+    populate_albums.append(('ionnalee', 'everyone afraid to be forgotten'))
+    populate_albums.append(('janelle monae', 'dirty computer'))
+    populate_albums.append(('goldfrapp', 'supernature'))
+    populate_albums.append(('austra', 'future politics'))
+    populate_albums.append(('marina', 'love + fear'))
+    populate_albums.append(('morcheeba', 'blood like lemonade'))
+    populate_albums.append(('purity ring', 'another eternity'))
+    #Paul
 
     for album in populate_albums:
         populateArtist(session, album[0], album[1])
@@ -190,31 +202,31 @@ def populateDataManually():
     # session.add(song1)
     # session.commit()
 
-    plist1 = Playlist(name="kaans playlist", user_id=user1.id, user=user1)
-    session.add(plist1)
-    session.commit()
+#     plist1 = Playlist(name="kaans playlist", user_id=user1.id, user=user1)
+#     session.add(plist1)
+#     session.commit()
 
     song_objects = [
         Song(uri="dummyuri", track_number=1, name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=2, name="Bodyache", popularity=100, duration=179000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=3, name="Push Pull", popularity=100, duration=169000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=4, name="Repetition", popularity=100, duration=159000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=5, name="Stranger than Earth", popularity=100, duration=149000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=6, name="Begin Again", popularity=100, duration=139000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=7, name="Dust Hymn", popularity=100, duration=129000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=1),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=8, name="Flood on the Floor", popularity=100, duration=119000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=9, name="Sea Castle", popularity=100, duration=144000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0),
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
         Song(uri="dummyuri", track_number=10, name="Stillness in Woe", popularity=100, duration=155000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1, playlist_id=0)
+             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1)
     ]
     session.add_all(song_objects)
     session.commit()
@@ -222,7 +234,7 @@ def populateDataManually():
 
 # If the script is directly executed, populate data in tables
 if __name__ == '__main__':
-    # populateDataManually()
+    #populateDataManually()
     # spotifyAPITest()
     populateDataFromSpotify()
 

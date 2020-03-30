@@ -13,16 +13,16 @@ import datetime
 # Configuration: Create instance of declarative base (class code will inherit this)
 Base = declarative_base()
 
-#association tables
-playlist_association = Table('playlist_item', Base.metadata,
-    Column('playlist_id', Integer, ForeignKey('song.playlist_id')),
-    Column('id', Integer, ForeignKey('playlist.id'))
-)
-
-# featuring_association = Table('featuring_item', Base.metadata,
-#     Column('song_id', Integer, ForeignKey('song.id')),
-#     Column('artist_id', Integer, ForeignKey('artist.id'))
+# #association tables
+# playlist_association = Table('playlist_item', Base.metadata,
+#     Column('playlist_id', Integer, ForeignKey('song.playlist_id')),
+#     Column('id', Integer, ForeignKey('playlist.id'))
 # )
+
+# # featuring_association = Table('featuring_item', Base.metadata,
+# #     Column('song_id', Integer, ForeignKey('song.id')),
+# #     Column('artist_id', Integer, ForeignKey('artist.id'))
+# # )
 
 
 # Class: Representation of table as a python class, extends the Base class
@@ -62,6 +62,23 @@ class Album(Base):
 
     artist = relationship(Artist, backref="artist") 
 
+class PlaylistItem(Base):
+    __tablename__ = 'playlist_item'
+    id = Column(Integer, primary_key=True)  # auto incremented
+    playlist_id = Column(Integer, ForeignKey('playlist.id'), nullable=False)
+    song_id = Column(Integer, ForeignKey('song.id'), nullable=False)
+
+    playlist = relationship(Playlist, backref="playlist")
+
+class FeaturingItem(Base):
+    __tablename__ = 'featuring_item'
+    id = Column(Integer, primary_key=True)  # auto incremented
+    artist_id = Column(Integer, ForeignKey('artist.id'), nullable=False)
+    song_id = Column(Integer, ForeignKey('song.id'), nullable=False)
+
+    featuringArtist = relationship(Artist, backref="featuringArtist")
+
+
 class Song(Base):
     __tablename__ = 'song'
 
@@ -79,9 +96,9 @@ class Song(Base):
     time_signature = Column(Integer, nullable=True)
     valence = Column(Float, nullable=True)
     album_id = Column(Integer, ForeignKey('album.id'), nullable=False)
-    playlist_id = Column(Integer, ForeignKey(Playlist.id), nullable=True)
+    #playlist_id = Column(Integer, ForeignKey(Playlist.id), nullable=True)
 
     album = relationship(Album, backref="album")
 
-    playlists = relationship(Playlist, secondary=playlist_association, backref="song")
+    #playlists = relationship(Playlist, backref="playlist")
     #artists = relationship(Artist, secondary=featuring_association, backref="featuring")
