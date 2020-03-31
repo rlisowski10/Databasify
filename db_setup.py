@@ -157,6 +157,16 @@ def populateDataFromSpotify():
     populate_albums.append(('morcheeba', 'blood like lemonade'))
     populate_albums.append(('purity ring', 'another eternity'))
     #Paul
+    populate_albums.append(('still woozy', 'lately ep'))
+    populate_albums.append(('vampire weekend', 'vampire weekend'))
+    populate_albums.append(('fleet foxes', 'fleet foxes'))
+    populate_albums.append(('alvvays', 'antisocialites'))
+    populate_albums.append(('cage the elephant', 'melophobia'))
+    populate_albums.append(('the arcs', 'yours, dreamily,'))
+    populate_albums.append(('tame impala', 'lonerism'))
+    populate_albums.append(('mild high club', 'skiptracing'))
+    populate_albums.append(('arctic monekys', 'am'))
+    populate_albums.append(('the beatles', 'abbey road (remastered)'))
 
     for album in populate_albums:
         populateArtist(session, album[0], album[1])
