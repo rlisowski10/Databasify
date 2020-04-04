@@ -17,6 +17,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import datetime
+import time
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 # Note that Spotify credentials (Client ID and Client Secret) should be added as System Variables.
@@ -64,6 +65,29 @@ def populateArtist(session, artist_name, album_name):
     populateAlbum(session, artist_db_obj, album)
 
 
+def determineReleaseDate(release_date):
+    """Returns a release date in python format, with the month and/or
+    day set to '1' if missing.
+
+    Keyword arguments:
+    release_date -- the release date of the album in string format.
+                    i.e. 2019-05-23
+    """
+    release_date = release_date.split('-')
+    if len(release_date) == 3:
+        release_date = datetime.datetime(
+            int(release_date[0]), int(release_date[1]), int(release_date[2]))
+    elif len(release_date) == 2:
+        release_date = datetime.datetime(
+            int(release_date[0]), int(release_date[1]), 1)
+    elif len(release_date) == 1:
+        release_date = datetime.datetime(int(release_date[0]), 1, 1)
+    else:
+        release_date = datetime.datetime(1900, 1, 1)
+
+    return release_date
+
+
 def populateAlbum(session, artist_db_obj, album):
     """Populates the album database table with data from the Spotify API.
 
@@ -73,14 +97,11 @@ def populateAlbum(session, artist_db_obj, album):
     album -- the album object containing Spotify data.
     """
     # Populate album information based on the album search.
-    release_date = album['release_date'].split('-')
-    release_date = datetime.datetime(int(release_date[0]),
-                                     int(release_date[1]),
-                                     int(release_date[2]))
     album_db_obj = Album(name=album['name'],
                          uri=album['uri'],
-                         release_date=release_date,
-                         artist_id=artist_db_obj.id, artist=artist_db_obj)
+                         release_date=determineReleaseDate(
+        album['release_date']),
+        artist_id=artist_db_obj.id, artist=artist_db_obj)
     session.add(album_db_obj)
     session.commit()
 
@@ -134,7 +155,7 @@ def populateDataFromSpotify():
     # Currently, adding more than one album from the same artist creates
     # duplicate artists. This will have to be dealt with.
     populate_albums = []
-    #Ryan
+    # Ryan
     populate_albums.append(('st vincent', 'masseduction'))
     populate_albums.append(('air', 'moon safari'))
     populate_albums.append(('wilco', 'yankee hotel foxtrot'))
@@ -145,7 +166,7 @@ def populateDataFromSpotify():
     populate_albums.append(('daft punk', 'random access memories'))
     populate_albums.append(('dan deacon', 'mystic familiar'))
     populate_albums.append(('cut copy', 'in ghost colours'))
-    #Kaan
+    # Kaan
     populate_albums.append(('iamx', 'metanoia'))
     populate_albums.append(('kim petras', 'turn off the light'))
     populate_albums.append(('allie x', 'cape god'))
@@ -156,7 +177,7 @@ def populateDataFromSpotify():
     populate_albums.append(('marina', 'love + fear'))
     populate_albums.append(('morcheeba', 'blood like lemonade'))
     populate_albums.append(('purity ring', 'another eternity'))
-    #Paul
+    # Paul
     populate_albums.append(('still woozy', 'lately ep'))
     populate_albums.append(('vampire weekend', 'vampire weekend'))
     populate_albums.append(('fleet foxes', 'fleet foxes'))
@@ -165,11 +186,14 @@ def populateDataFromSpotify():
     populate_albums.append(('the arcs', 'yours, dreamily,'))
     populate_albums.append(('tame impala', 'lonerism'))
     populate_albums.append(('mild high club', 'skiptracing'))
-    populate_albums.append(('arctic monekys', 'am'))
+    populate_albums.append(('arctic monkeys', 'am'))
     populate_albums.append(('the beatles', 'abbey road (remastered)'))
 
     for album in populate_albums:
+        # Sleeps for two seconds between albums to not overwhelm the Spotify API.
+        time.sleep(1)
         populateArtist(session, album[0], album[1])
+        print(f"Populated to DB: {album[1]}")
 
 
 def populateDataManually():
@@ -244,7 +268,7 @@ def populateDataManually():
 
 # If the script is directly executed, populate data in tables
 if __name__ == '__main__':
-    #populateDataManually()
+    # populateDataManually()
     # spotifyAPITest()
     populateDataFromSpotify()
 
