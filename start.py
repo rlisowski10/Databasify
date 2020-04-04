@@ -13,31 +13,69 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-
+#welcome page
 @app.route('/', methods=['GET'])
 def index():
-    albums = session.query(Album).all()
-    return render_template('index.html', title='Albums', albums=albums)
+    playlists = session.query(Playlist).all()
+    return render_template('index.html', title='Playlists', playlists=playlists)
 
-@app.route('/albums/<int:album_id>/', methods=['GET'])
-def showSong(album_id):
+@app.route('/artist', methods=['GET'])
+def showArtists():
+    artists = session.query(Artist).all()
+    playlists = session.query(Playlist).all()
+    return render_template('artists.html', title='Artists', artists=artists, playlists=playlists)
+
+@app.route('/album', methods=['GET'])
+def showAlbums():
+    albums = session.query(Album).all()
+    playlists = session.query(Playlist).all()
+    return render_template('albums.html', title='Albums', albums=albums, playlists=playlists)
+
+
+@app.route('/album/<int:album_id>/', methods=['GET'])
+def showSongs(album_id):
     albumName = session.query(Album).filter_by(id=album_id).one()
     songs = session.query(Song).filter_by(album_id=album_id)
+    playlists = session.query(Playlist).all()
     return render_template(
-        'songs.html',
+        'albumSongs.html',
         title='Songs',
         songs=songs,
-        albumName=albumName)
+        albumName=albumName, playlists=playlists)
 
-@app.route('/artists/<int:artist_id>/', methods=['GET'])
-def showAlbums(artist_id):
+@app.route('/artist/<int:artist_id>/', methods=['GET'])
+def showAlbum(artist_id):
     artistName = session.query(Artist).filter_by(id=artist_id).one()
     albums = session.query(Album).filter_by(artist_id=artist_id)
+    playlists = session.query(Playlist).all()
     return render_template(
-        'albums.html',
+        'artistAlbums.html',
         title='Albums',
         albums=albums,
-        artistName=artistName)
+        artistName=artistName, playlists=playlists)
+
+@app.route('/playlist/<int:playlist_id>/', methods=['GET'])
+def showPlayListsSongs(playlist_id):
+    #songs = session.query(Playlist).join(PlaylistItem).filter(id == playlist_id)
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+    return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, playlists=playlists)
+
+@app.route('/playlist/<int:playlist_id>/new/', methods=['GET', 'POST'])
+def addSongToPlaylist(playlist_id):
+    if request.method == 'POST':
+        #newSong = assign the song object
+        #session.add(newSong)
+        #session.commit()
+        flash("New song added to the playlist!")
+        return redirect(url_for('index'))
+    else:
+        playlists = session.query(Playlist).all()
+        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+        return render_template(
+            'addSongToPlaylist.html',
+            title='Playlists',
+            playlists=playlists, playlistName=playlistName)
 
 if __name__ == '__main__':
     app.debug = True

@@ -8,7 +8,7 @@
     <meta content="" name="description">
     <meta content="" name="author">
 
-    <title>Welcome to Databasify!</title>
+    <title>Songs for {{ playlistName.name }}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -47,7 +47,7 @@
     <div id="page-content-wrapper">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <button class="btn btn-secondary btn-sm" id="menu-toggle">Toggle Menu Bar</button>&nbsp;
+            <button class="btn btn-secondary btn-sm" id="menu-toggle">Toggle Cuisine List</button>&nbsp;
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             {% for message in messages %}
@@ -62,9 +62,11 @@
         </nav>
 
         <div class="container-fluid">
-            <h1>Hello JK</h1>
-            <p>Select an item from the left...</p>
+            <h1>This page will display songs in {{playlistName.name}}</h1>
+        
+
         </div>
+
     </div>
     <!-- /#page-content-wrapper -->
 

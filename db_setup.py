@@ -19,7 +19,7 @@ from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import datetime
 import time
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+#from spotipy.oauth2 import SpotifyClientCredentials
 # Note that Spotify credentials (Client ID and Client Secret) should be added as System Variables.
 # Client ID as SPOTIPY_CLIENT_ID and Client Secret as SPOTIPY_CLIENT_SECRET
 
@@ -28,7 +28,7 @@ engine = create_engine('sqlite:///spotify.db')
 Base.metadata.create_all(engine)
 
 # Create a Spotify object using Spotify developer credentials.
-sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+#sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
 
 def spotifyAPITest():
@@ -265,11 +265,65 @@ def populateDataManually():
     session.add_all(song_objects)
     session.commit()
 
+def populatePlaylists():
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
+    user1 = User(email="kaan@kaan.ca", password="1234")
+    user2 = User(email="ryan@ryan.ca", password="1234")
+    user3 = User(email="paul@paul.ca", password="1234")
+
+    session.add(user1)
+    session.add(user2)
+    session.add(user3)
+
+    p1 = Playlist(name="Kaan's list", user_id=user1.id, user=user1)
+    p2 = Playlist(name="Ryan's list", user_id=user1.id, user=user2)
+    p3 = Playlist(name="Paul's list", user_id=user1.id, user=user3)
+
+    session.add(p1)
+    session.add(p2)
+    session.add(p3)
+    session.commit()
+
+def populatePlaylistItems():
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    session = DBSession()
+
+
+    #ryan
+    pi1 = PlaylistItem(playlist_id=2, song_id=2)
+    pi2 = PlaylistItem(playlist_id=2, song_id=15)
+    pi3 = PlaylistItem(playlist_id=2, song_id=30)
+    #kaan
+    pi4 = PlaylistItem(playlist_id=1, song_id=153)
+    pi5 = PlaylistItem(playlist_id=1, song_id=162)
+    pi6 = PlaylistItem(playlist_id=1, song_id=171)
+    #paul
+    pi7 = PlaylistItem(playlist_id=3, song_id=265)
+    pi8 = PlaylistItem(playlist_id=3, song_id=301)
+    pi9 = PlaylistItem(playlist_id=3, song_id=250)
+
+    session.add(pi1)
+    session.add(pi2)
+    session.add(pi3)
+    session.add(pi4)
+    session.add(pi5)
+    session.add(pi6)
+    session.add(pi7)
+    session.add(pi8)
+    session.add(pi9)
+
+    session.commit()
 
 # If the script is directly executed, populate data in tables
 if __name__ == '__main__':
     # populateDataManually()
     # spotifyAPITest()
-    populateDataFromSpotify()
+    # populateDataFromSpotify()
+    #populatePlaylists()
+    populatePlaylistItems()
 
     print("Database populated successfully")
