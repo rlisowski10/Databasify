@@ -1,0 +1,177 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Page Content -->
+    <div class="container-fluid">
+        {% block header %}{% endblock %}
+        <!-- Search Input -->
+        <div class="container">
+            <!-- Row 1 -->
+            <div class="row">
+                <div class="col">
+                    <label for="paramA">SELECT</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramA" required="">
+                        {% block searchType %}{% endblock %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please select a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="paramB">WHERE</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramB" required="">
+                        {% block attributes1 %}{% endblock %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramC" required="">
+                        <option value="">Choose...</option>
+                        <option>=</option>
+                        <option>!=</option>
+                        <option><</option>
+                        <option>></option>
+                        <option><=</option>
+                        <option>>=</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid conditional.
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="paramD" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Parameter required.
+                    </div>
+                </div>
+            </div>
+            <!-- /#row-1-wrapper -->
+            <!-- Row 2 -->
+            <div class="row">
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <label for="paramB">AND</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramE" required="">
+                        {% block attributes2 %}{% endblock %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramF" required="">
+                        <option value="">Choose...</option>
+                        <option>=</option>
+                        <option>!=</option>
+                        <option><</option>
+                        <option>></option>
+                        <option><=</option>
+                        <option>>=</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid conditional.
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="paramG" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Parameter required.
+                    </div>
+                </div>
+            </div>
+            <!-- /#row-2-wrapper -->
+            <!-- Row 3 -->
+            <div class="row">
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <label for="paramB">AND</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramH" required="">
+                        {% block attributes3 %}{% endblock %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramI" required="">
+                        <option value="">Choose...</option>
+                        <option>=</option>
+                        <option>!=</option>
+                        <option><</option>
+                        <option>></option>
+                        <option><=</option>
+                        <option>>=</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid conditional.
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" id="paramJ" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Parameter required.
+                    </div>
+                </div>
+            </div>
+            <!-- /#row-3-wrapper -->
+            <!-- Row 4 -->
+            <div class="row">
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <!-- Empty column -->
+                </div>
+                <div class="col">
+                    <label for="paramB">ORDER BY</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" id="paramK" required="">
+                        {% block attributes4 %}{% endblock %}
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="paramL" value="option1" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                            Ascending
+                        </label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exampleRadios" id="paramM" value="option2">
+                        <label class="form-check-label" for="exampleRadios2">
+                            Descending
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- /#row-4-wrapper -->
+        </div>
+        <!-- /#search-input-wrapper -->
+    </div>
+    <!-- /#page-content-wrapper -->
+{% endblock content %}
