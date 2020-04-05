@@ -1,50 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="" name="description">
-    <meta content="" name="author">
-
-    <title>Add song to {{ playlistName.name }}</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="/static/simple-sidebar.css" rel="stylesheet">
-
-</head>
-
-<body>
-
-<div class="d-flex" id="wrapper">
-
-    <!-- Sidebar -->
-    <div class="bg-light border-right" id="sidebar-wrapper">
-        <div class="sidebar-heading"><a class="btn btn-success btn-lg" data-placement="top" data-toggle="tooltip"
-                                        href="/" title="Goes to the main page">Databasify</a></div>
-        <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action btn btn-success" href="/artist" role="button">Artists</a>
-            <a class="list-group-item list-group-item-action btn btn-success" href="/album" role="button">Albums</a>
-            <a class="list-group-item list-group-item-action btn btn-success" href="/playlist/new/" role="button">Create
-                New Playlist</a>
-            {% for playlist in playlists %}
-            <div aria-label="Modify Playlist" class="btn-group" role="group"></a>
-                <a class="btn list-group-item list-group-item-action btn btn-light" href="/playlist/{{ playlist.id }}/"
-                   role="button">{{ playlist.name }}</a>
-                <a class="btn btn-sm" data-placement="top" data-toggle="tooltip"
-                   href="/playlist/{{ playlist.id }}/new/" role="button"
-                   title="Add a new song into {{ playlist.name }} playlist">Add</a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    <!-- /#sidebar-wrapper -->
-
-
+{% extends "layout.html" %}
+{% block content %}
     <!-- Page Content -->
     <div id="page-content-wrapper">
 
@@ -71,26 +26,4 @@
 
     </div>
     <!-- /#page-content-wrapper -->
-
-</div>
-<!-- /#wrapper -->
-
-<!-- Bootstrap core JavaScript -->
-<script src="/static/vendor/jquery/jquery.min.js"></script>
-<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Menu Toggle Script -->
-<script>
-    $("#menu-toggle").click(function (e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
-</script>
-
-</body>
-
-</html>
+{% endblock content %}
