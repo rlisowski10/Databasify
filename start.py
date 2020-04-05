@@ -63,8 +63,8 @@ def showPlayListsSongs(playlist_id):
         .filter(PlaylistItem.playlist_id==playlist_id)
         # .order_by(Group.number)
         ).all()
-    for row in result:
-        print(row.Song.name)
+    # for row in result:
+    #     print(row.Song.name)
 
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
@@ -104,6 +104,39 @@ def newPlaylist():
             'createNewPlaylist.html',
             title='Create a playlist',
             playlists=playlists, users=users)
+
+#DELETE playlist
+@app.route('/playlist/<int:playlist_id>/delete/', methods=['GET', 'POST'])
+def deletePlaylist(playlist_id):
+    playlists = session.query(Playlist).all()
+    deletePlaylist = session.query(Playlist).filter_by(id=playlist_id).one()
+
+    deleteSongs = session.query(PlaylistItem).filter_by(playlist_id=playlist_id).all()
+
+    for row in deleteSongs:
+        print(row.id)
+
+    if request.method == 'POST':
+        session.delete(deletePlaylist)
+       
+        # for row in deleteSongs:
+        #     print(row.id)
+            #obj=session.query(PlaylistItem).filter(PlaylistItem.playlist_id == row.id)
+            #PlaylistItem.query.filter(PlaylistItem.id == row.id).delete()
+            #session.delete(obj)
+
+        session.commit()
+        flash("Playlist {} is deleted".format(deletePlaylist.name))
+        return redirect(url_for('index', playlist_id=playlist_id))
+    else:
+        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+        return render_template(
+            'deletePlaylist.html',
+            playlist_id=playlist_id,
+            playlistName=playlistName,
+            deletePlaylist=deletePlaylist,
+            playlists=playlists)
+
 
 if __name__ == '__main__':
     app.debug = True
