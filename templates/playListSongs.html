@@ -73,15 +73,15 @@
             <table class="table table-sm table-hover">
                 <thead>
                 <tr>
-                    <th scope="col">Artist Name</th>
                     <th scope="col">Song Name</th>
+                    <th scope="col">Artist Name</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 {% for song in songs %}
                 <tr>
-                    <td>{{ song.Song.name }}</td>
+                    <td><a href="{{ song.Song.uri }}">{{ song.Song.name }}</a></td>
                     <td>{{ song.Song.album.artist.name }}</td>
 
                 </tr>
