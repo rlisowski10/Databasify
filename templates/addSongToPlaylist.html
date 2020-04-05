@@ -1,28 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
     <!-- Page Content -->
-    <div id="page-content-wrapper">
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <button class="btn btn-secondary btn-sm" id="menu-toggle">Toggle Cuisine List</button>&nbsp;
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            {% for message in messages %}
-            <div class="btn btn-secondary btn-sm alert-primary" role="alert">
-                {{ message }}
-            </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-            {% block body %}{% endblock %}
-
-        </nav>
-
-        <div class="container-fluid">
-            <h1>This page will add songs to {{playlistName.name}}</h1>
-        
-
-        </div>
+    <div class="container-fluid">
+        <h1>This page will add songs to {{playlistName.name}}</h1>
+    
 
     </div>
     <!-- /#page-content-wrapper -->
