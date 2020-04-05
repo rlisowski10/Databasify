@@ -1,7 +1,8 @@
 {% extends "searchLayout.html" %}
 
 {% block header %}
-    <h1>Searching songs for {{playlistName.name}}</h1>
+    <h1>Searching songs for {{playlistName.name}}
+    <a href="/playlist/{{ playlistName.id }}/new/" class="btn btn-secondary btn-sm btn-success" role="button">Search Songs</a></h1>
 {% endblock header %}
 
 {% block searchType %}
