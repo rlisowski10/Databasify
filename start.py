@@ -158,6 +158,27 @@ def searchSong(playlist_id):
             title='Search Songs',
             playlists=playlists, playlistName=playlistName)
 
+# xport playlist
+@app.route('/playlist/<int:playlist_id>/export/', methods=['GET', 'POST'])
+def exportPlaylist(playlist_id):
+    if request.method == 'POST':
+        return "This page will create a playlist on Spotify for playlist id: %s" % playlist_id
+    else:
+        uris = []
+        strOut = ""
+        songURIS = (session.query(PlaylistItem, Playlist, Song)
+        .filter(PlaylistItem.song_id == Song.id)
+        .filter(PlaylistItem.playlist_id == Playlist.id)
+        .filter(PlaylistItem.playlist_id==playlist_id)
+        ).all()
+
+        for row in songURIS:
+            strOut = strOut + row.Song.uri + ","
+            #print(row.Song.uri)
+            uris.append(row.Song.uri)
+        # USE uris LIST VARIABLE TO PASS TO SPOTIFY
+        return "This page will create a playlist on Spotify with these uris: %s" % strOut
+
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'SECRET KEY'
