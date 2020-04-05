@@ -113,10 +113,9 @@ def deletePlaylist(playlist_id):
 
     deleteSongs = session.query(PlaylistItem).filter_by(playlist_id=playlist_id).all()
 
-    for row in deleteSongs:
-        session.delete(row)
-
     if request.method == 'POST':
+        for row in deleteSongs:
+            session.delete(row)
         #session.delete(deletePlaylist)
         session.delete(deletePlaylist)
         session.commit()
