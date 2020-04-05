@@ -114,17 +114,11 @@ def deletePlaylist(playlist_id):
     deleteSongs = session.query(PlaylistItem).filter_by(playlist_id=playlist_id).all()
 
     for row in deleteSongs:
-        print(row.id)
+        session.delete(row)
 
     if request.method == 'POST':
+        #session.delete(deletePlaylist)
         session.delete(deletePlaylist)
-       
-        # for row in deleteSongs:
-        #     print(row.id)
-            #obj=session.query(PlaylistItem).filter(PlaylistItem.playlist_id == row.id)
-            #PlaylistItem.query.filter(PlaylistItem.id == row.id).delete()
-            #session.delete(obj)
-
         session.commit()
         flash("Playlist {} is deleted".format(deletePlaylist.name))
         return redirect(url_for('index', playlist_id=playlist_id))
