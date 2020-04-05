@@ -8,7 +8,7 @@
     <meta content="" name="description">
     <meta content="" name="author">
 
-    <title>Songs for {{ playlistName.name }}</title>
+    <title>Create a new playlist</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -64,9 +64,24 @@
         </nav>
 
         <div class="container-fluid">
-            <h1>This page will display songs in {{playlistName.name}}</h1>
-        
-
+            <h1>Create a new playlist</h1>
+            <form action="{{url_for('newPlaylist')}}" method = 'POST'>
+                <div class="form-row">
+                  <div class="col-md-4 mb-3">
+                    <label for="validationDefault01">New playlist name</label>
+                    <input type="text" name="name" class="form-control" id="validationDefault01" placeholder="Enter playlist name here" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                    <label for="validationDefault02">Select User</label>
+                    <select name="user_email" class="form-control" id="validationDefault02" required>
+                      {% for user in users %}
+                      <option>{{user.email}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                <button class="btn btn-primary" type="submit" value="Create">Create</button>
+                </form>
         </div>
 
     </div>

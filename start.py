@@ -77,6 +77,27 @@ def addSongToPlaylist(playlist_id):
             title='Playlists',
             playlists=playlists, playlistName=playlistName)
 
+@app.route('/playlist/new/', methods=['GET', 'POST'])
+def newPlaylist():
+    if request.method == 'POST':
+        user_id_form = session.query(User).filter_by(email=request.form['user_email']).one()
+        print("HELOOOO", user_id_form.id)
+        newPlaylistName = Playlist(
+            name=request.form['name'],
+            user_id=user_id_form.id)
+        session.add(newPlaylistName)
+        session.commit()
+        flash("New playlist was created!")
+        return redirect(url_for('index'))
+    else:
+        playlists = session.query(Playlist).all()
+        users = session.query(User).all()
+        return render_template(
+            'createNewPlaylist.html',
+            title='Create a playlist',
+            playlists=playlists, users=users)
+
 if __name__ == '__main__':
     app.debug = True
+    app.secret_key = 'SECRET KEY'
     app.run(host='127.0.0.1', port=5001)
