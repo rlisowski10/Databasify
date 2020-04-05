@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask import request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from model import Base, Album, Artist, Playlist, Song, User
+from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 
 app = Flask(__name__)
 
@@ -57,9 +57,18 @@ def showAlbum(artist_id):
 @app.route('/playlist/<int:playlist_id>/', methods=['GET'])
 def showPlayListsSongs(playlist_id):
     #songs = session.query(Playlist).join(PlaylistItem).filter(id == playlist_id)
+    result = (session.query(PlaylistItem, Playlist, Song)
+        .filter(PlaylistItem.song_id == Song.id)
+        .filter(PlaylistItem.playlist_id == Playlist.id)
+        .filter(PlaylistItem.playlist_id==playlist_id)
+        # .order_by(Group.number)
+        ).all()
+    for row in result:
+        print(row.Song.name)
+
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-    return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, playlists=playlists)
+    return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, songs=result, playlists=playlists)
 
 @app.route('/playlist/<int:playlist_id>/new/', methods=['GET', 'POST'])
 def addSongToPlaylist(playlist_id):
@@ -81,7 +90,6 @@ def addSongToPlaylist(playlist_id):
 def newPlaylist():
     if request.method == 'POST':
         user_id_form = session.query(User).filter_by(email=request.form['user_email']).one()
-        print("HELOOOO", user_id_form.id)
         newPlaylistName = Playlist(
             name=request.form['name'],
             user_id=user_id_form.id)

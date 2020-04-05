@@ -64,7 +64,31 @@
         </nav>
 
         <div class="container-fluid">
-            <h1>This page will display songs in {{playlistName.name}}</h1>
+            <h1>Songs in {{playlistName.name}}</h1>
+            {% if songs|length== 0 %}
+            <div class="alert alert-danger" role="alert">
+                There are no songs in this album! 
+            </div>
+            {% else %}
+            <table class="table table-sm table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Artist Name</th>
+                    <th scope="col">Song Name</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for song in songs %}
+                <tr>
+                    <td>{{ song.Song.name }}</td>
+                    <td>{{ song.Song.album.artist.name }}</td>
+
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
         
 
         </div>
