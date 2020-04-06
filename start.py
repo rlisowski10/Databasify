@@ -132,7 +132,7 @@ def deletePlaylist(playlist_id):
 
 @app.route('/playlist/<int:playlist_id>/new/searchartist', methods=['GET', 'POST'])
 def searchArtist(playlist_id):
-    songs = None
+    #songs = None
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -147,27 +147,13 @@ def searchArtist(playlist_id):
             artists = session.query(Artist).filter(filterAttribute < userText).all()
         else:
             artists = session.query(Artist).filter(filterAttribute == userText).all()
-
-        # Get all albums for the provided artists.
-        albums = []
-        for artist in artists:
-            album_results = session.query(Album).filter(Album.artist_id == artist.id).all()
-            for album in album_results:
-                albums.append(album)
-
-        # Get all songs for the provided albums.
-        songs = []
-        for album in albums:
-            song_results = session.query(Song).filter(Song.album_id == album.id).all()
-            for song in song_results:
-                songs.append(song)
     
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
     return render_template(
         'searchArtist.html',
         title='Search Artist',
-        playlists=playlists, playlistName=playlistName, songs=songs)
+        playlists=playlists, playlistName=playlistName, artists=artists)
 
 @app.route('/playlist/<int:playlist_id>/new/searchalbum', methods=['GET', 'POST'])
 def searchAlbum(playlist_id):
@@ -187,20 +173,13 @@ def searchAlbum(playlist_id):
         else:
             albums = session.query(Album).filter(filterAttribute == userText).all()
 
-        # Get all songs for the provided albums.
-        songs = []
-        for album in albums:
-            song_results = session.query(Song).filter(Song.album_id == album.id).all()
-            for song in song_results:
-                songs.append(song)
-
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
 
     return render_template(
         'searchAlbum.html',
         title='Search Albums',
-        playlists=playlists, playlistName=playlistName, songs=songs)
+        playlists=playlists, playlistName=playlistName, albums=albums)
 
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def searchSong(playlist_id):
