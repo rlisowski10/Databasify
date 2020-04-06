@@ -19,17 +19,17 @@ def index():
     playlists = session.query(Playlist).all()
     return render_template('index.html', title='Playlists', playlists=playlists)
 
-@app.route('/artist', methods=['GET'])
-def showArtists():
-    artists = session.query(Artist).all()
-    playlists = session.query(Playlist).all()
-    return render_template('artists.html', title='Artists', artists=artists, playlists=playlists)
+# @app.route('/artist', methods=['GET'])
+# def showArtists():
+#     artists = session.query(Artist).all()
+#     playlists = session.query(Playlist).all()
+#     return render_template('searchArtist.html', title='Artists', artists=artists, playlists=playlists)
 
-@app.route('/album', methods=['GET'])
-def showAlbums():
-    albums = session.query(Album).all()
-    playlists = session.query(Playlist).all()
-    return render_template('albums.html', title='Albums', albums=albums, playlists=playlists)
+# @app.route('/album', methods=['GET'])
+# def showAlbums():
+#     albums = session.query(Album).all()
+#     playlists = session.query(Playlist).all()
+#     return render_template('searchAlbum.html', title='Albums', albums=albums, playlists=playlists)
 
 
 @app.route('/album/<int:album_id>/', methods=['GET'])
@@ -82,7 +82,7 @@ def addSongToPlaylist(playlist_id):
         playlists = session.query(Playlist).all()
         playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
         return render_template(
-            'addSongToPlaylist.html',
+            'searchSong.html',
             title='Playlists',
             playlists=playlists, playlistName=playlistName)
 
@@ -130,9 +130,11 @@ def deletePlaylist(playlist_id):
             deletePlaylist=deletePlaylist,
             playlists=playlists)
 
-@app.route('/playlist/<int:playlist_id>/new/searchartist', methods=['GET', 'POST'])
-def searchArtist(playlist_id):
-    artists = None
+@app.route('/artist', methods=['GET', 'POST'])
+def searchArtist():
+    artists = session.query(Artist).all()
+    playlists = session.query(Playlist).all()
+
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -148,16 +150,16 @@ def searchArtist(playlist_id):
         else:
             artists = session.query(Artist).filter(filterAttribute == userText).all()
     
-    playlists = session.query(Playlist).all()
-    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
     return render_template(
         'searchArtist.html',
         title='Search Artist',
-        playlists=playlists, playlistName=playlistName, artists=artists)
+        playlists=playlists, artists=artists)
 
-@app.route('/playlist/<int:playlist_id>/new/searchalbum', methods=['GET', 'POST'])
-def searchAlbum(playlist_id):
-    albums = None
+@app.route('/album', methods=['GET', 'POST'])
+def searchAlbum():
+    albums = session.query(Album).all()
+    playlists = session.query(Playlist).all()
+
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -173,13 +175,11 @@ def searchAlbum(playlist_id):
         else:
             albums = session.query(Album).filter(filterAttribute == userText).all()
 
-    playlists = session.query(Playlist).all()
-    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
 
     return render_template(
         'searchAlbum.html',
         title='Search Albums',
-        playlists=playlists, playlistName=playlistName, albums=albums)
+        playlists=playlists, albums=albums)
 
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def searchSong(playlist_id):
@@ -191,6 +191,9 @@ def searchSong(playlist_id):
         userText = request.form['usrText']
 
         # Gets the song attribute based on the attribute string from the UI.
+        # if filterAttribute == 'artist':
+        #     songs = session.query(Song).filter(Song.album == userText).all()
+        # else:
         filterAttribute = getattr(Song, filterAttribute)
         if filterOperator == '>':
             songs = session.query(Song).filter(filterAttribute > userText).all()

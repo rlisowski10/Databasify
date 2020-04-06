@@ -11,10 +11,10 @@ songs
 {% block attributes1 %}
 <option value="">Choose...</option>
 <option>Name</option>
-<option>Album Name</option>
-<option>Artist Name</option>
+<option>Album</option>
+<option>Artist</option>
 <option>Popularity</option>
-<option>Duration (ms)</option>
+<option>Duration</option>
 <option>Time Signature</option>
 <option>Danceability</option>
 <option>Tempo</option>
@@ -28,7 +28,7 @@ songs
 {% if songs != None %}
 <!-- Page Content -->
 <div class="container-fluid">
-    {% if songs|length == 0 %}
+    {% if (songs|length == 0) and (first == False) %}
     <div class="alert alert-danger" role="alert">
         There were no song results returned.
     </div>
