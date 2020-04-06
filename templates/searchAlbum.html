@@ -16,27 +16,28 @@ albums
 {% endblock attributes1 %}
 
 {% block results %}
+{% if albums != None %}
 <!-- Page Content -->
 <div class="container-fluid">
-    {% if songs|length == 0 %}
+    {% if albums|length == 0 %}
     <div class="alert alert-danger" role="alert">
-        There were no song results returned.
+        There were no albums results returned.
     </div>
     {% else %}
     <table class="table table-sm table-hover">
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Popularity</th>
-                <th scope="col">Energy</th>
+                <th scope="col">Release Date</th>
+                <th scope="col">Artist Name</th>
             </tr>
         </thead>
         <tbody>
-            {% for song in songs %}
+            {% for album in albums %}
             <tr>
-                <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
-                <td>{{ song.popularity }}</td>
-                <td>{{ song.energy }}</td>
+                <td><a href="{{ album.uri }}">{{ album.name }}</a></td>
+                <td>{{ album.release_date }}</td>
+                <td>{{ album.artist }}</td>
             </tr>
             {% endfor %}
         </tbody>

@@ -15,27 +15,28 @@ artists
 {% endblock attributes1 %}
 
 {% block results %}
+{% if artists != None %}
 <!-- Page Content -->
 <div class="container-fluid">
-    {% if songs|length == 0 %}
+    {% if artists|length == 0 %}
     <div class="alert alert-danger" role="alert">
-        There were no song results returned.
+        There were no artist results returned.
     </div>
     {% else %}
     <table class="table table-sm table-hover">
         <thead>
             <tr>
                 <th scope="col">Name</th>
+                <th scope="col">Followers</th>
                 <th scope="col">Popularity</th>
-                <th scope="col">Energy</th>
             </tr>
         </thead>
         <tbody>
-            {% for song in songs %}
+            {% for artist in artists %}
             <tr>
-                <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
-                <td>{{ song.popularity }}</td>
-                <td>{{ song.energy }}</td>
+                <td><a href="{{ artist.uri }}">{{ artist.name }}</a></td>
+                <td>{{ artist.followers }}</td>
+                <td>{{ artist.popularity }}</td>
             </tr>
             {% endfor %}
         </tbody>

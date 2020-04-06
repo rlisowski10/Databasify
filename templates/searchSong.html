@@ -11,20 +11,21 @@ songs
 {% block attributes1 %}
 <option value="">Choose...</option>
 <option>Name</option>
+<option>Album Name</option>
+<option>Artist Name</option>
 <option>Popularity</option>
-<option>Duration</option>
+<option>Duration (ms)</option>
+<option>Time Signature</option>
 <option>Danceability</option>
-<option>Explicit</option>
 <option>Tempo</option>
 <option>Energy</option>
 <option>Instrumentalness</option>
-<option>Time Signature</option>
 <option>Valence</option>
-<option>Album Name</option>
-<option>Artist Name</option>
+<option>Explicit</option>
 {% endblock attributes1 %}
 
 {% block results %}
+{% if songs != None %}
 <!-- Page Content -->
 <div class="container-fluid">
     {% if songs|length == 0 %}
@@ -36,16 +37,34 @@ songs
         <thead>
             <tr>
                 <th scope="col">Name</th>
+                <th scope="col">Album</th>
+                <th scope="col">Artist</th>
                 <th scope="col">Popularity</th>
+                <th scope="col">Duration (ms)</th>
+                <th scope="col">Time Signature</th>
+                <th scope="col">Danceability</th>
+                <th scope="col">Tempo</th>
                 <th scope="col">Energy</th>
+                <th scope="col">Instrumentalness</th>
+                <th scope="col">Valence</th>
+                <th scope="col">Explicit</th>
             </tr>
         </thead>
         <tbody>
             {% for song in songs %}
             <tr>
                 <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
+                <td><a href="{{ song.album.uri }}">{{ song.album.name }}</a></td>
+                <td><a href="{{ song.album.artist.uri }}">{{ song.album.artist.name }}</a></td>
                 <td>{{ song.popularity }}</td>
+                <td>{{ song.duration }}</td>
+                <td>{{ song.time_signature }}</td>
+                <td>{{ song.danceability }}</td>
+                <td>{{ song.tempo }}</td>
                 <td>{{ song.energy }}</td>
+                <td>{{ song.instrumentalness }}</td>
+                <td>{{ song.valence }}</td>
+                <td>{{ song.explicit }}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -53,6 +72,7 @@ songs
     {% endif %}
 </div>
 <!-- /#page-content-wrapper -->
+{% endif %}
 {% endblock results %}
 
 {% block infoTable %}
