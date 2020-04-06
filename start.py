@@ -3,7 +3,7 @@ from flask import request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
-
+import json
 app = Flask(__name__)
 
 engine = create_engine('sqlite:///spotify.db',
@@ -248,6 +248,14 @@ def exportPlaylist(playlist_id):
             uris.append(row.Song.uri)
         # USE uris LIST VARIABLE TO PASS TO SPOTIFY
         return "This page will create a playlist on Spotify with these uris: %s" % strOut
+
+# JSON API endpoint for getting all albums
+@app.route('/album/JSON')
+def albumsJSON():
+    results = session.query(Album).all()
+    return jsonify(Albums=[
+        result.serialize for result in results]
+        )
 
 if __name__ == '__main__':
     app.debug = True

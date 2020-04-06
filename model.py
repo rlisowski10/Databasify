@@ -62,6 +62,17 @@ class Album(Base):
 
     artist = relationship(Artist, backref="artist") 
 
+    # JSON objects in a serializable format
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'uri': self.uri,
+            'release_date': self.release_date,
+            'artist_id': self.artist_id,
+        }
+
 class PlaylistItem(Base):
     __tablename__ = 'playlist_item'
     id = Column(Integer, primary_key=True)  # auto incremented
@@ -102,3 +113,4 @@ class Song(Base):
 
     #playlists = relationship(Playlist, backref="playlist")
     #artists = relationship(Artist, secondary=featuring_association, backref="featuring")
+
