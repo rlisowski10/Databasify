@@ -21,29 +21,32 @@ albums
 <div class="container-fluid">
     {% if albums|length == 0 %}
     <div class="alert alert-danger" role="alert">
-        There were no albums results returned.
+        There were no album results returned.
     </div>
     {% else %}
     <table class="table table-sm table-hover">
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Release Date</th>
                 <th scope="col">Artist Name</th>
+                <th scope="col">Release Date</th>
+                <th scope="col">Songs</th>
             </tr>
         </thead>
         <tbody>
             {% for album in albums %}
             <tr>
                 <td><a href="{{ album.uri }}">{{ album.name }}</a></td>
+                <td><a href="{{ album.artist.uri }}">{{ album.artist.name }}</a></td>
                 <td>{{ album.release_date }}</td>
-                <td>{{ album.artist }}</td>
+                <td>TO BE IMPLEMENTED</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
 </div>
+{% endif %}
 <!-- /#page-content-wrapper -->
 {% endblock results %}
 

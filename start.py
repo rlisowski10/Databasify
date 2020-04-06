@@ -132,7 +132,7 @@ def deletePlaylist(playlist_id):
 
 @app.route('/playlist/<int:playlist_id>/new/searchartist', methods=['GET', 'POST'])
 def searchArtist(playlist_id):
-    #songs = None
+    artists = None
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -157,7 +157,7 @@ def searchArtist(playlist_id):
 
 @app.route('/playlist/<int:playlist_id>/new/searchalbum', methods=['GET', 'POST'])
 def searchAlbum(playlist_id):
-    songs = None
+    albums = None
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')

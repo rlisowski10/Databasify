@@ -29,6 +29,8 @@ artists
                 <th scope="col">Name</th>
                 <th scope="col">Followers</th>
                 <th scope="col">Popularity</th>
+                <th scope="col">Albums</th>
+                <th scope="col">Songs</th>
             </tr>
         </thead>
         <tbody>
@@ -37,12 +39,15 @@ artists
                 <td><a href="{{ artist.uri }}">{{ artist.name }}</a></td>
                 <td>{{ artist.followers }}</td>
                 <td>{{ artist.popularity }}</td>
+                <td>TO BE IMPLEMENTED</td>
+                <td>TO BE IMPLEMENTED</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
 </div>
+{% endif %}
 <!-- /#page-content-wrapper -->
 {% endblock results %}
 
