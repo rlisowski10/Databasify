@@ -249,6 +249,31 @@ def exportPlaylist(playlist_id):
         # USE uris LIST VARIABLE TO PASS TO SPOTIFY
         return "This page will create a playlist on Spotify with these uris: %s" % strOut
 
+# Route for UPDATE playlist
+@app.route('/playlist/<int:playlist_id>/edit/', methods=['GET', 'POST'])
+def editPlaylist(playlist_id):
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+
+    editedPlaylist = session.query(Playlist).filter_by(id=playlist_id).one()
+
+    if request.method == 'POST':
+        if request.form['name']:
+            editedPlaylist.name = request.form['name']
+        session.commit()
+        flash("Playlist has been updated!")
+        return redirect(url_for('showPlayListsSongs', playlists=playlists, playlist_id=playlistName.id))
+    else:
+        playlists = session.query(Playlist).all()
+        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+
+        return render_template(
+            'editPlaylist.html',
+            playlist_id=playlist_id,
+            playlists=playlists,
+            editedPlaylist=editedPlaylist,
+            playlistName=playlistName)
+
 # JSON API endpoint for getting all albums
 @app.route('/album/JSON')
 def albumsJSON():

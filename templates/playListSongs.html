@@ -3,7 +3,8 @@
     <!-- Page Content -->
     <div class="container-fluid">
         <h1>Songs in {{playlistName.name}}
-        <a href="/playlist/{{ playlistName.id }}/delete/" class="btn btn-secondary btn-sm btn-danger" role="button">Delete Playlist</a>
+        <a href="/playlist/{{ playlistName.id }}/delete/" class="btn btn-secondary btn-sm btn-danger" role="button">Delete</a>
+        <a href="/playlist/{{ playlistName.id }}/edit/" class="btn btn-secondary btn-sm btn-success" role="button">Rename</a>
         <a href="/playlist/{{ playlistName.id }}/new/" class="btn btn-secondary btn-sm btn-success" role="button">Add Songs</a>
         <a href="/playlist/{{ playlistName.id }}/export/" class="btn btn-secondary btn-sm btn-success" role="button">Export to Spotify</a></h1>
         </div>
