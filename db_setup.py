@@ -19,7 +19,7 @@ from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import datetime
 import time
 import spotipy
-#from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials
 # Note that Spotify credentials (Client ID and Client Secret) should be added as System Variables.
 # Client ID as SPOTIPY_CLIENT_ID and Client Secret as SPOTIPY_CLIENT_SECRET
 
@@ -28,7 +28,7 @@ engine = create_engine('sqlite:///spotify.db')
 Base.metadata.create_all(engine)
 
 # Create a Spotify object using Spotify developer credentials.
-#sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
 
 def spotifyAPITest():
@@ -58,7 +58,8 @@ def populateArtist(session, artist_name, album_name):
     # TODO: Implement code to deal with an existing artist.
     artist_db_obj = Artist(name=artist['name'],
                            uri=artist['uri'],
-                           followers=artist['popularity'])
+                           popularity=artist['popularity'],
+                           followers=artist['followers']['total'])
     session.add(artist_db_obj)
     session.commit()
 
@@ -322,8 +323,8 @@ def populatePlaylistItems():
 if __name__ == '__main__':
     # populateDataManually()
     # spotifyAPITest()
-    # populateDataFromSpotify()
-    #populatePlaylists()
+    populateDataFromSpotify()
+    populatePlaylists()
     populatePlaylistItems()
 
     print("Database populated successfully")
