@@ -49,7 +49,8 @@ class Artist(Base):
     id = Column(Integer, primary_key=True)  # auto incremented
     uri = Column(String(50), nullable=False) #spotify:artist:6rqhFgbbKwnb9MLmUQDhG6
     name = Column(String(150), nullable=False)
-    followers = Column(Integer, nullable=False) #of people following them (spotify)
+    popularity = Column(Integer, nullable=False) #popularity of the artist
+    followers = Column(Integer, nullable=False) #number of spotify followers
 
 class Album(Base):
     __tablename__ = 'album'
