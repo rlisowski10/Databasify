@@ -9,16 +9,10 @@
             <!-- Row 1 -->
             <div class="row">
                 <div class="col">
-                    <label>SELECT</label>
+                    <label>Please provide a {% block searchType %}{% endblock %} filter:</label>
                 </div>
                 <div class="col">
-                    {% block searchType %}{% endblock %}
-                </div>
-                <div class="col">
-                    <label for="paramA">WHERE</label>
-                </div>
-                <div class="col">
-                    <select class="custom-select d-block w-100" name="pB" required="">
+                    <select class="custom-select d-block w-100" name="attribute" required="">
                         {% block attributes1 %}{% endblock %}
                     </select>
                     <div class="invalid-feedback">
@@ -26,7 +20,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <select class="custom-select d-block w-100" required="">
+                    <select class="custom-select d-block w-100" name="operator" required="">
                         <option value="">Choose...</option>
                         <option>=</option>
                         <option>!=</option>
@@ -42,7 +36,7 @@
                     </div>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="" required="">
+                    <input type="text" class="form-control" name="usrText" required="">
                     <div class="invalid-feedback">
                         Parameter required.
                     </div>

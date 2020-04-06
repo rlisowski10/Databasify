@@ -152,8 +152,15 @@ def searchAlbum(playlist_id):
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def searchSong(playlist_id):
     if request.method == 'POST':
-        attribute = request.form['pB']
-        return f"<h3>{attribute}</h3>"
+        # Get all user-provided values from the UI.
+        attribute = request.form['attribute'].lower().replace(' ', '_')
+        operator = request.form['operator']
+        userText = request.form['usrText']
+
+        # Gets the song attribute based on the attribute string from the UI.
+        songAttribute = getattr(Song, attribute)
+        songs = session.query(Song).filter(songAttribute > 0.700).all()
+        return f"<h3>{attribute} and {operator} and {userText}</h3>"
     else:
         playlists = session.query(Playlist).all()
         playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
