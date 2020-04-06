@@ -70,21 +70,21 @@ def showPlayListsSongs(playlist_id):
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
     return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, songs=result, playlists=playlists)
 
-@app.route('/playlist/<int:playlist_id>/new/', methods=['GET', 'POST'])
-def addSongToPlaylist(playlist_id):
-    if request.method == 'POST':
-        #newSong = assign the song object
-        #session.add(newSong)
-        #session.commit()
-        flash("New song added to the playlist!")
-        return redirect(url_for('index'))
-    else:
-        playlists = session.query(Playlist).all()
-        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-        return render_template(
-            'searchSong.html',
-            title='Playlists',
-            playlists=playlists, playlistName=playlistName)
+# @app.route('/playlist/<int:playlist_id>/new/', methods=['GET', 'POST'])
+# def addSongToPlaylist(playlist_id):
+#     if request.method == 'POST':
+#         #newSong = assign the song object
+#         #session.add(newSong)
+#         #session.commit()
+#         flash("New song added to the playlist!")
+#         return redirect(url_for('index'))
+#     else:
+#         playlists = session.query(Playlist).all()
+#         playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+#         return render_template(
+#             'searchSong.html',
+#             title='Playlists',
+#             playlists=playlists, playlistName=playlistName)
 
 @app.route('/playlist/new/', methods=['GET', 'POST'])
 def newPlaylist():
