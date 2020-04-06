@@ -151,23 +151,29 @@ def searchAlbum(playlist_id):
 
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def searchSong(playlist_id):
+    songs = None
     if request.method == 'POST':
         # Get all user-provided values from the UI.
-        attribute = request.form['attribute'].lower().replace(' ', '_')
-        operator = request.form['operator']
+        filterAttribute = request.form['attribute'].lower().replace(' ', '_')
+        filterOperator = request.form['operator']
         userText = request.form['usrText']
 
         # Gets the song attribute based on the attribute string from the UI.
-        songAttribute = getattr(Song, attribute)
-        songs = session.query(Song).filter(songAttribute > 0.700).all()
-        return f"<h3>{attribute} and {operator} and {userText}</h3>"
-    else:
-        playlists = session.query(Playlist).all()
-        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-        return render_template(
-            'searchSong.html',
-            title='Search Songs',
-            playlists=playlists, playlistName=playlistName)
+        filterAttribute = getattr(Song, filterAttribute)
+        if filterOperator == '>':
+            songs = session.query(Song).filter(filterAttribute > userText).all()
+        elif filterOperator == '<':
+            songs = session.query(Song).filter(filterAttribute < userText).all()
+        else:
+            songs = session.query(Song).filter(filterAttribute == userText).all()
+
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+
+    return render_template( 
+        'searchSong.html',
+        title='Search Songs',
+        playlists=playlists, playlistName=playlistName, songs=songs)
 
 # xport playlist
 @app.route('/playlist/<int:playlist_id>/export/', methods=['GET', 'POST'])

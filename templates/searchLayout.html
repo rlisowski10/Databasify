@@ -5,49 +5,44 @@
     {% block header %}{% endblock %}
     <!-- Search Input -->
     <form action="#" method='POST'>
-        <div class="container">
-            <!-- Row 1 -->
-            <div class="row">
-                <div class="col">
-                    <label>Please provide a {% block searchType %}{% endblock %} filter:</label>
-                </div>
-                <div class="col">
-                    <select class="custom-select d-block w-100" name="attribute" required="">
-                        {% block attributes1 %}{% endblock %}
-                    </select>
-                    <div class="invalid-feedback">
-                        Please provide a valid parameter.
-                    </div>
-                </div>
-                <div class="col">
-                    <select class="custom-select d-block w-100" name="operator" required="">
-                        <option value="">Choose...</option>
-                        <option>=</option>
-                        <option>!=</option>
-                        <option>
-                            << /option>
-                        <option>></option>
-                        <option>
-                            <=< /option>
-                        <option>>=</option>
-                    </select>
-                    <div class="invalid-feedback">
-                        Please provide a valid conditional.
-                    </div>
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" name="usrText" required="">
-                    <div class="invalid-feedback">
-                        Parameter required.
-                    </div>
+        <!-- Row 1 -->
+        <div class="row">
+            <div class="col">
+                <label>Please provide a {% block searchType %}{% endblock %} filter:</label>
+            </div>
+            <div class="col">
+                <select class="custom-select d-block w-100" name="attribute" required="">
+                    {% block attributes1 %}{% endblock %}
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid parameter.
                 </div>
             </div>
-            <!-- /#row-1-wrapper -->
+            <div class="col">
+                <select class="custom-select d-block w-100" name="operator" required="">
+                    <option value="">Choose...</option>
+                    <option>=</option>
+                    <option>&lt</option>
+                    <option>&gt</option>
+                </select>
+                <div class="invalid-feedback">
+                    Please provide a valid conditional.
+                </div>
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" name="usrText" required="">
+                <div class="invalid-feedback">
+                    Parameter required.
+                </div>
+            </div>
         </div>
+        <!-- /#row-1-wrapper -->
         <button class="btn btn-primary" type="submit" value="searchSong">Search Song</button>
     </form>
-
     <!-- /#search-input-wrapper -->
+    {% if songs != None %}
+        {% block results %}{% endblock %}
+    {% endif %}
 </div>
 <!-- /#page-content-wrapper -->
 {% endblock content %}
