@@ -133,24 +133,28 @@ def deletePlaylist(playlist_id):
 
 @app.route('/playlist/<int:playlist_id>/new/searchartist', methods=['GET', 'POST'])
 def searchArtist(playlist_id):
-        playlists = session.query(Playlist).all()
-        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-        return render_template(
-            'searchArtist.html',
-            title='Search Artist',
-            playlists=playlists, playlistName=playlistName)
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+    return render_template(
+        'searchArtist.html',
+        title='Search Artist',
+        playlists=playlists, playlistName=playlistName)
 
 @app.route('/playlist/<int:playlist_id>/new/searchalbum', methods=['GET', 'POST'])
 def searchAlbum(playlist_id):
-        playlists = session.query(Playlist).all()
-        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-        return render_template(
-            'searchAlbum.html',
-            title='Search Album',
-            playlists=playlists, playlistName=playlistName)
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+    return render_template(
+        'searchAlbum.html',
+        title='Search Album',
+        playlists=playlists, playlistName=playlistName)
 
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def searchSong(playlist_id):
+    if request.method == 'POST':
+        attribute = request.form['pB']
+        return f"<h3>{attribute}</h3>"
+    else:
         playlists = session.query(Playlist).all()
         playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
         return render_template(
