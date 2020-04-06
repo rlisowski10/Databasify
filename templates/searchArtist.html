@@ -44,3 +44,34 @@ artists
 </div>
 <!-- /#page-content-wrapper -->
 {% endblock results %}
+
+{% block infoTable %}
+<table class="table table-sm table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Attribute</th>
+            <th scope="col">Type</th>
+            <th scope="col">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Name</td>
+            <td>string</td>
+            <td>The name of the artist.</td>
+        </tr>
+        <tr>
+            <td>Followers</td>
+            <td>integer</td>
+            <td>The total number of followers.</td>
+        </tr>
+        <tr>
+            <td>Popularity</td>
+            <td>integer</td>
+            <td>
+                The popularity of the artist. The value will be between 0 and 100, with 100 being the most popular. The artist’s popularity is calculated from the popularity of all the artist’s tracks.
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock infoTable%}
