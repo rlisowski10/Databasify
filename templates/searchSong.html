@@ -5,7 +5,7 @@
 {% endblock header %}
 
 {% block searchType %}
-song
+songs
 {% endblock searchType %}
 
 {% block attributes1 %}
@@ -34,7 +34,6 @@ song
     <table class="table table-sm table-hover">
         <thead>
             <tr>
-                <th scope="col">Track Number</th>
                 <th scope="col">Name</th>
                 <th scope="col">Popularity</th>
                 <th scope="col">Energy</th>
@@ -43,7 +42,6 @@ song
         <tbody>
             {% for song in songs %}
             <tr>
-                <td>{{ song.track_number }}</td>
                 <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
                 <td>{{ song.popularity }}</td>
                 <td>{{ song.energy }}</td>

@@ -1,37 +1,47 @@
 {% extends "searchLayout.html" %}
 
 {% block header %}
-    <h1>Searching albums for {{playlistName.name}}</h1>
+<h1>Searching albums for {{playlistName.name}}</h1>
 {% endblock header %}
 
 {% block searchType %}
-    <option value="">Album</option>
+albums
 {% endblock searchType %}
 
 {% block attributes1 %}
-    <option value="">Choose...</option>
-    <option>Name</option>
-    <option>Release Date</option>
-    <option>Artist ID</option>
+<option value="">Choose...</option>
+<option>Name</option>
+<option>Release Date</option>
+<option>Artist ID</option>
 {% endblock attributes1 %}
 
-{% block attributes2 %}
-    <option value="">Choose...</option>
-    <option>Name</option>
-    <option>Release Date</option>
-    <option>Artist ID</option>
-{% endblock attributes2 %}
-
-{% block attributes3 %}
-    <option value="">Choose...</option>
-    <option>Name</option>
-    <option>Release Date</option>
-    <option>Artist ID</option>
-{% endblock attributes3 %}
-
-{% block attributes4 %}
-    <option value="">Choose...</option>
-    <option>Name</option>
-    <option>Release Date</option>
-    <option>Artist ID</option>
-{% endblock attributes4 %}
+{% block results %}
+<!-- Page Content -->
+<div class="container-fluid">
+    {% if songs|length == 0 %}
+    <div class="alert alert-danger" role="alert">
+        There were no song results returned.
+    </div>
+    {% else %}
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Popularity</th>
+                <th scope="col">Energy</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
+                <td>{{ song.popularity }}</td>
+                <td>{{ song.energy }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+<!-- /#page-content-wrapper -->
+{% endblock results %}
