@@ -194,6 +194,11 @@ def addSongsToPlaylist(playlist_id,song_id_list):
         #print("hello",song_id_list)
         songidToBeAdded = request.form.getlist('mycheckbox')
         print(songidToBeAdded)
+        for s in songidToBeAdded:
+            pitem = PlaylistItem(playlist_id=playlist_id, song_id=s)
+            session.add(pitem)
+        session.commit()
+
         flash("Songs added to the playlist")
         return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
         #return "post"
