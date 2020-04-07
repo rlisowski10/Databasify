@@ -2,12 +2,12 @@
 # Configuration: import all modules needed
 import os
 import sys
-from sqlalchemy import Table, Column, ForeignKey, Integer, String, DateTime, Text, Float, Boolean
+from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Text, Float, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import datetime
+from datetime import date
 
 
 # Configuration: Create instance of declarative base (class code will inherit this)
@@ -58,7 +58,7 @@ class Album(Base):
     id = Column(Integer, primary_key=True)  # auto incremented
     uri = Column(String(50), nullable=False)# spotify:album:6rqhFgbbKwnb9MLmUQDhG6
     name = Column(String(150), nullable=False)
-    release_date = Column(DateTime, nullable=False)
+    release_date = Column(Date, nullable=False)
     artist_id = Column(Integer, ForeignKey('artist.id'), nullable=False)
 
     artist = relationship(Artist, backref="artist") 
