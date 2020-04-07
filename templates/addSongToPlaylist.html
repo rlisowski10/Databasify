@@ -6,7 +6,7 @@
         There were no song results returned.
     </div>
     {% else %}
-    <form action="{{url_for('addSongsToPlaylist', playlist_id=playlistName.id, song_id_list=playlistName.id)}}" method = 'POST'></form>
+    <form action="{{url_for('addSongsToPlaylist', playlist_id=playlistName.id, song_id_list=playlistName.id)}}" method = 'POST'>
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
@@ -30,8 +30,8 @@
                     <tr>
                         <td><input type="checkbox" value="{{ song.id }}" name="mycheckbox"></td>
                         <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
-                        <td><a href="{{ song.album.uri }}">{{ song.album.name }}</a></td>
-                        <td><a href="{{ song.album.artist.uri }}">{{ song.album.artist.name }}</a></td>
+                        <td><a href="/album/{{ song.album.id }}">{{ song.album.name }}</a></td>
+                        <td><a href="/artist/{{ song.album.artist.id }}">{{ song.album.artist.name }}</a></td>
                         <td>{{ song.popularity }}</td>
                         <td>{{ song.duration }}</td>
                         <td>{{ song.time_signature }}</td>
@@ -45,7 +45,7 @@
                     {% endfor %}
             </tbody>
         </table>
-        <button class="btn btn-primary" type="submit" value="addSongsToPlaylist">Add to playlist</button>
+        <button class="btn btn-primary" type="submit" value="Create">Add to playlist</button>
     </form>
     {% endif %}
 </div>

@@ -191,17 +191,18 @@ def addSongsToPlaylist(playlist_id,song_id_list):
         #newSong = assign the song object
         #session.add(newSong)
         #session.commit()
-        print("posttt from addSongstoPlaylist")
-        print(request.form.getlist('mycheckbox'))
-        flash("capture checkboxesss")
-        #return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
-        return "post"
+        #print("hello",song_id_list)
+        songidToBeAdded = request.form.getlist('mycheckbox')
+        print(songidToBeAdded)
+        flash("Songs added to the playlist")
+        return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
+        #return "post"
     else:
         #return "get method addSongsToPlaylist"
         #song_id_list=request.args.get('song_id_list')
         song_id_list=song_id_list.replace("[","").replace("]","").replace(" ","")
         song_id_list=song_id_list.split(",")
-        print("hello",song_id_list)
+        #print("hello",song_id_list)
         songs = session.query(Song).filter(Song.id.in_(song_id_list)).all()
         #print(songs)
         #return "getting it"
@@ -310,4 +311,4 @@ def albumsJSON():
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'SECRET KEY'
-    app.run(host='127.0.0.1', port=5001)
+    app.run(host='127.0.0.1', port=5002)
