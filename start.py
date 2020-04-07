@@ -184,46 +184,32 @@ def searchAlbum():
 
 @app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
 def addSongsToPlaylist(playlist_id):
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+
     if request.method == 'POST':
         #newSong = assign the song object
         #session.add(newSong)
         #session.commit()
+        print("posttt from addSongstoPlaylist")
         print(request.form.getlist('mycheckbox'))
         flash("capture checkboxesss")
-        return redirect(url_for('searchSong', playlist_id=playlist_id))
+        return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
     else:
-        playlists = session.query(Playlist).all()
-        playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-        return render_template(
-            'addSongToPlaylist.html',
-            title='Playlists',
-            playlists=playlists, playlistName=playlistName)
+        return "get method addSongsToPlaylist"
+        # return render_template( 
+        # 'addSongToPlaylist.html',
+        # title='Add songs to playlist',
+        # playlists=playlists, playlistName=playlistName, songs=songs)
 
-    # playlists = session.query(Playlist).all()
-    # playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-
-    # editedPlaylist = session.query(Playlist).filter_by(id=playlist_id).one()
-
-    # if request.method == 'POST':
-    #     if request.form['name']:
-    #         editedPlaylist.name = request.form['name']
-    #     session.commit()
-    #     flash("Playlist has been updated!")
-    #     return redirect(url_for('showPlayListsSongs', playlists=playlists, playlist_id=playlistName.id))
-    # else:
-    #     playlists = session.query(Playlist).all()
-    #     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-
-    #     return render_template(
-    #         'editPlaylist.html',
-    #         playlist_id=playlist_id,
-    #         playlists=playlists,
-    #         editedPlaylist=editedPlaylist,
-    #         playlistName=playlistName)
 
 @app.route('/playlist/<int:playlist_id>/new', methods=['GET', 'POST'])
+
 def searchSong(playlist_id):
     songs = None
+    playlists = session.query(Playlist).all()
+    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
+
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -244,10 +230,13 @@ def searchSong(playlist_id):
             else:
                 songs = session.query(Song).filter(filterAttribute == userText).all()
 
-    playlists = session.query(Playlist).all()
-    playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-
-    return render_template( 
+        return redirect(url_for('addSongsToPlaylist', playlist_id = playlistName.id))
+        # return render_template( 
+        # 'addSongToPlaylist.html',
+        # title='Add songs to playlist',
+        # playlists=playlists, playlistName=playlistName, songs=songs)
+    else:
+        return render_template( 
         'searchSong.html',
         title='Search Songs',
         playlists=playlists, playlistName=playlistName, songs=songs)

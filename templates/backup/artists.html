@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Page Content -->
+    <div class="container-fluid">
+        <h1>All Artists in the database</h1>
+        {% if artists|length == 0 %}
+        <div class="alert alert-danger" role="alert">
+            There are no albums in the database! 
+        </div>
+        {% else %}
+        <table class="table table-sm table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Followers</th>
+                <th scope="col">Number of Albums</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for artist in artists %}
+            <tr>
+                <td><a href="/artist/{{ artist.id }}">{{ artist.name }}</a></td>
+                <td>{{ artist.followers }}</td>
+                <td>to be implemented</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+    </div>
+    <!-- /#page-content-wrapper -->
+{% endblock content %}

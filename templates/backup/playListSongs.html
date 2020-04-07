@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Page Content -->
+    <div class="container-fluid">
+        <h1>Songs in {{playlistName.name}}
+        <a href="/playlist/{{ playlistName.id }}/delete/" class="btn btn-secondary btn-sm btn-danger" role="button">Delete</a>
+        <a href="/playlist/{{ playlistName.id }}/edit/" class="btn btn-secondary btn-sm btn-success" role="button">Rename</a>
+        <a href="/playlist/{{ playlistName.id }}/new" class="btn btn-secondary btn-sm btn-success" role="button">Add Songs</a>
+        <a href="/playlist/{{ playlistName.id }}/export/" class="btn btn-secondary btn-sm btn-success" role="button">Export to Spotify</a></h1>
+        </div>
+        {% if songs|length== 0 %}
+        <div class="alert alert-danger" role="alert">
+            There are no songs in this album! 
+        </div>
+        {% else %}
+        <table class="table table-sm table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Song Name</th>
+                <th scope="col">Artist Name</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for song in songs %}
+            <tr>
+                <td><a href="{{ song.Song.uri }}">{{ song.Song.name }}</a></td>
+                <td>{{ song.Song.album.artist.name }}</td>
+
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <!-- /#page-content-wrapper -->
+{% endblock content %}

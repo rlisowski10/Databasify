@@ -1,175 +1,56 @@
-{% extends "searchLayout.html" %}
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Page Content -->
+    <div class="container-fluid">
+        <h1>Searching songs for {{playlistName.name}}</h1>
 
-{% block header %}
-<h1>Searching songs for {{playlistName.name}}</h1>
-{% endblock header %}
-
-{% block searchType %}
-songs
-{% endblock searchType %}
-
-{% block attributes1 %}
-<option value="">Choose...</option>
-<option>Name</option>
-<option>Album</option>
-<option>Artist</option>
-<option>Popularity</option>
-<option>Duration</option>
-<option>Time Signature</option>
-<option>Danceability</option>
-<option>Tempo</option>
-<option>Energy</option>
-<option>Instrumentalness</option>
-<option>Valence</option>
-<option>Explicit</option>
-{% endblock attributes1 %}
-
-{% block results %}
-{% if songs != None %}
-<!-- Page Content -->
-<div class="container-fluid">
-    {% if (songs|length == 0) and (first == False) %}
-    <div class="alert alert-danger" role="alert">
-        There were no song results returned.
+        <form action="{{url_for('searchSong', playlist_id=playlistName.id)}}" method='POST'>
+            <!-- Row 1 -->
+            <div class="row">
+                <div class="col">
+                    <label>Select filter:</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" name="attribute" required="">
+                        <option value="">=</option>
+                        <option>Name</option>
+                        <option>Album</option>
+                        <option>Artist</option>
+                        <option>Popularity</option>
+                        <option>Duration</option>
+                        <option>Time Signature</option>
+                        <option>Danceability</option>
+                        <option>Tempo</option>
+                        <option>Energy</option>
+                        <option>Instrumentalness</option>
+                        <option>Valence</option>
+                        <option selected="selected">Explicit</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid parameter.
+                    </div>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" name="operator" required="">
+                        <option value="">Choose...</option>
+                        <option selected="selected">=</option>
+                        <option>&lt</option>
+                        <option>&gt</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Please provide a valid conditional.
+                    </div>
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="usrText" value="1" required="">
+                    <div class="invalid-feedback">
+                        Parameter required.
+                    </div>
+                </div>
+            </div>
+            <!-- /#row-1-wrapper -->
+            <button class="btn btn-primary" type="submit" value="searchSong">Filter</button>
+        </form>
     </div>
-    {% else %}
-    <table class="table table-sm table-hover">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Album</th>
-                <th scope="col">Artist</th>
-                <th scope="col">Popularity</th>
-                <th scope="col">Duration (ms)</th>
-                <th scope="col">Time Signature</th>
-                <th scope="col">Danceability</th>
-                <th scope="col">Tempo</th>
-                <th scope="col">Energy</th>
-                <th scope="col">Instrumentalness</th>
-                <th scope="col">Valence</th>
-                <th scope="col">Explicit</th>
-            </tr>
-        </thead>
-        <tbody>
-            <form action="{{url_for('searchSong', playlist_id=playlistName.id)}}" method = 'POST'></form>
-                {% for song in songs %}
-                <tr>
-                    <td><input type="checkbox" value="{{ song.id }}" name="mycheckbox"></td>
-                    <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
-                    <td><a href="{{ song.album.uri }}">{{ song.album.name }}</a></td>
-                    <td><a href="{{ song.album.artist.uri }}">{{ song.album.artist.name }}</a></td>
-                    <td>{{ song.popularity }}</td>
-                    <td>{{ song.duration }}</td>
-                    <td>{{ song.time_signature }}</td>
-                    <td>{{ song.danceability }}</td>
-                    <td>{{ song.tempo }}</td>
-                    <td>{{ song.energy }}</td>
-                    <td>{{ song.instrumentalness }}</td>
-                    <td>{{ song.valence }}</td>
-                    <td>{{ song.explicit }}</td>
-                </tr>
-                {% endfor %}
-                <button class="btn btn-primary" type="submit" value="Add">Add to playlist</button>
-            </form>
-        </tbody>
-    </table>
-    {% endif %}
-</div>
-<!-- /#page-content-wrapper -->
-{% endif %}
-{% endblock results %}
-
-{% block infoTable %}
-<table class="table table-sm table-hover">
-    <thead>
-        <tr>
-            <th scope="col">Attribute</th>
-            <th scope="col">Type</th>
-            <th scope="col">Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Name</td>
-            <td>string</td>
-            <td>The name of the track.</td>
-        </tr>
-        <tr>
-            <td>Album Name</td>
-            <td>string</td>
-            <td>
-                The name of the album. In case of an album takedown, the value may be an empty string.
-            </td>
-        </tr>
-        <tr>
-            <td>Artist Name</td>
-            <td>string</td>
-            <td>
-                The name of the artist.
-            </td>
-        </tr>
-        <tr>
-            <td>Populairity</td>
-            <td>integer</td>
-            <td>
-                The popularity of a track is a value between 0 and 100, with 100 being the most popular. The popularity is calculated by algorithm and is based, in the most part, on the total number of plays the track has had and how recent those plays are.
-            </td>
-        </tr>
-        <tr>
-            <td>Duration</td>
-            <td>integer</td>
-            <td>The track length in milliseconds.</td>
-        </tr>
-        <tr>
-            <td>Time signature</td>
-            <td>integer</td>
-            <td>
-                An estimated overall time signature of a track. The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure).
-            </td>
-        </tr>
-        <tr>
-            <td>Danceability</td>
-            <td>float</td>
-            <td>
-                Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable.
-            </td>
-        </tr>
-        <tr>
-            <td>Tempo</td>
-            <td>float</td>
-            <td>
-                The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration.
-            </td>
-        </tr>
-        <tr>
-            <td>Energy</td>
-            <td>float</td>
-            <td>
-                Energy is a measure from 0.0 to 1.0 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale. Perceptual features contributing to this attribute include dynamic range, perceived loudness, timbre, onset rate, and general entropy.
-            </td>
-        </tr>
-        <tr>
-            <td>Instrumentalness</td>
-            <td>float</td>
-            <td>
-                Predicts whether a track contains no vocals. “Ooh” and “aah” sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly “vocal”. The closer the instrumentalness value is to 1.0, the greater likelihood the track contains no vocal content. Values above 0.5 are intended to represent instrumental tracks, but confidence is higher as the value approaches 1.0.
-            </td>
-        </tr>
-        <tr>
-            <td>Valence</td>
-            <td>float</td>
-            <td>
-                A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
-            </td>
-        </tr>
-        <tr>
-            <td>Explicit</td>
-            <td>boolean</td>
-            <td>
-                Whether or not the track has explicit lyrics ( true = yes it does; false = no it does not OR unknown).
-            </td>
-        </tr>
-    </tbody>
-</table>
-{% endblock infoTable%}
+    <!-- /#page-content-wrapper -->
+{% endblock content %}
