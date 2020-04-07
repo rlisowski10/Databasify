@@ -24,6 +24,22 @@ songs
 <option>Explicit</option>
 {% endblock attributes1 %}
 
+{% block attributes2 %}
+<option value="">Choose...</option>
+<option>Name</option>
+<option>Album</option>
+<option>Artist</option>
+<option>Popularity</option>
+<option>Duration</option>
+<option>Time Signature</option>
+<option>Danceability</option>
+<option>Tempo</option>
+<option>Energy</option>
+<option>Instrumentalness</option>
+<option>Valence</option>
+<option>Explicit</option>
+{% endblock attributes2 %}
+
 {% block results %}
 {% if songs != None %}
 <!-- Page Content -->
@@ -96,14 +112,14 @@ songs
             <td>The name of the track.</td>
         </tr>
         <tr>
-            <td>Album Name</td>
+            <td>Album</td>
             <td>string</td>
             <td>
                 The name of the album. In case of an album takedown, the value may be an empty string.
             </td>
         </tr>
         <tr>
-            <td>Artist Name</td>
+            <td>Artist</td>
             <td>string</td>
             <td>
                 The name of the artist.

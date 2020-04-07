@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask import request, redirect, url_for, flash, jsonify
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import json
@@ -140,15 +140,37 @@ def searchArtist():
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
         filterOperator = request.form['operator']
         userText = request.form['usrText']
+        orderByParam = request.form['orderByParam'].lower().replace(' ', '_')
+        orderByOrder = request.form['orderByOrder']
 
         # Gets the artist attribute based on the attribute string from the UI.
-        filterAttribute = getattr(Artist, filterAttribute)
-        if filterOperator == '>':
-            artists = session.query(Artist).filter(filterAttribute > userText).all()
-        elif filterOperator == '<':
-            artists = session.query(Artist).filter(filterAttribute < userText).all()
+        if orderByParam == '':
+            filterAttribute = getattr(Artist, filterAttribute)
+            if filterOperator == '>':
+                artists = session.query(Artist).filter(filterAttribute > userText).all()
+            elif filterOperator == '<':
+                artists = session.query(Artist).filter(filterAttribute < userText).all()
+            else:
+                artists = session.query(Artist).filter(filterAttribute == userText).all()
+        elif orderByOrder == 'ascending':
+            filterAttribute = getattr(Artist, filterAttribute)
+            orderByParam = getattr(Artist, orderByParam)
+            if filterOperator == '>':
+                artists = session.query(Artist).filter(filterAttribute > userText).order_by(orderByParam).all()
+            elif filterOperator == '<':
+                artists = session.query(Artist).filter(filterAttribute < userText).order_by(orderByParam).all()
+            else:
+                artists = session.query(Artist).filter(filterAttribute == userText).order_by(orderByParam).all()
         else:
-            artists = session.query(Artist).filter(filterAttribute == userText).all()
+            filterAttribute = getattr(Artist, filterAttribute)
+            orderByParam = getattr(Artist, orderByParam)
+            if filterOperator == '>':
+                artists = session.query(Artist).filter(filterAttribute > userText).order_by(desc(orderByParam)).all()
+            elif filterOperator == '<':
+                artists = session.query(Artist).filter(filterAttribute < userText).order_by(desc(orderByParam)).all()
+            else:
+                artists = session.query(Artist).filter(filterAttribute == userText).order_by(desc(orderByParam)).all()
+
     
     return render_template(
         'searchArtist.html',
@@ -165,16 +187,45 @@ def searchAlbum():
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
         filterOperator = request.form['operator']
         userText = request.form['usrText']
+        orderByParam = request.form['orderByParam'].lower().replace(' ', '_')
+        orderByOrder = request.form['orderByOrder']
 
         # Gets the album attribute based on the attribute string from the UI.
-        filterAttribute = getattr(Album, filterAttribute)
-        if filterOperator == '>':
-            albums = session.query(Album).filter(filterAttribute > userText).all()
-        elif filterOperator == '<':
-            albums = session.query(Album).filter(filterAttribute < userText).all()
+        if orderByParam == '':
+            if filterAttribute == 'artist':
+                albums = session.query(Album).join(Artist).filter(Artist.name == userText).all()
+            else:
+                filterAttribute = getattr(Album, filterAttribute)
+                if filterOperator == '>':
+                    albums = session.query(Album).filter(filterAttribute > userText).all()
+                elif filterOperator == '<':
+                    albums = session.query(Album).filter(filterAttribute < userText).all()
+                else:
+                    albums = session.query(Album).filter(filterAttribute == userText).all()
+        elif orderByOrder == 'ascending':
+            orderByParam = getattr(Album, orderByParam)
+            if filterAttribute == 'artist':
+                albums = session.query(Album).join(Artist).filter(Artist.name == userText).order_by(orderByParam).all()
+            else:
+                filterAttribute = getattr(Album, filterAttribute)
+                if filterOperator == '>':
+                    albums = session.query(Album).filter(filterAttribute > userText).order_by(orderByParam).all()
+                elif filterOperator == '<':
+                    albums = session.query(Album).filter(filterAttribute < userText).order_by(orderByParam).all()
+                else:
+                    albums = session.query(Album).filter(filterAttribute == userText).order_by(orderByParam).all()
         else:
-            albums = session.query(Album).filter(filterAttribute == userText).all()
-
+            orderByParam = getattr(Album, orderByParam)
+            if filterAttribute == 'artist':
+                albums = session.query(Album).join(Artist).filter(Artist.name == userText).order_by(desc(orderByParam)).all()
+            else:
+                filterAttribute = getattr(Album, filterAttribute)
+                if filterOperator == '>':
+                    albums = session.query(Album).filter(filterAttribute > userText).order_by(desc(orderByParam)).all()
+                elif filterOperator == '<':
+                    albums = session.query(Album).filter(filterAttribute < userText).order_by(desc(orderByParam)).all()
+                else:
+                    albums = session.query(Album).filter(filterAttribute == userText).order_by(desc(orderByParam)).all()
 
     return render_template(
         'searchAlbum.html',
@@ -229,20 +280,52 @@ def searchSong(playlist_id):
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
         filterOperator = request.form['operator']
         userText = request.form['usrText']
+        orderByParam = request.form['orderByParam'].lower().replace(' ', '_')
+        orderByOrder = request.form['orderByOrder']
 
         # Gets the song attribute based on the attribute string from the UI.
-        if filterAttribute == 'artist':
-            songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
-        elif filterAttribute == 'album':
-            songs = session.query(Song).join(Album).filter(Album.name == userText).all()
-        else:
-            filterAttribute = getattr(Song, filterAttribute)
-            if filterOperator == '>':
-                songs = session.query(Song).filter(filterAttribute > userText).all()
-            elif filterOperator == '<':
-                songs = session.query(Song).filter(filterAttribute < userText).all()
+        if orderByParam == '':
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).all()
             else:
-                songs = session.query(Song).filter(filterAttribute == userText).all()
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).all()
+        elif orderByOrder == 'ascending':
+            orderByParam = getattr(Song, orderByParam)
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(orderByParam).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(orderByParam).all()
+            else:
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).order_by(orderByParam).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).order_by(orderByParam).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).order_by(orderByParam).all()
+        else:
+            orderByParam = getattr(Song, orderByParam)
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(desc(orderByParam)).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(desc(orderByParam)).all()
+            else:
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).order_by(desc(orderByParam)).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).order_by(desc(orderByParam)).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).order_by(desc(orderByParam)).all()
+
 
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()

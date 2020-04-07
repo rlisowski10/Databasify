@@ -12,8 +12,15 @@ albums
 <option value="">Choose...</option>
 <option>Name</option>
 <option>Release Date</option>
-<option>Artist Name</option>
+<option>Artist</option>
 {% endblock attributes1 %}
+
+{% block attributes2 %}
+<option value="">Choose...</option>
+<option>Name</option>
+<option>Release Date</option>
+<option>Artist</option>
+{% endblock attributes2 %}
 
 {% block results %}
 {% if albums != None %}
@@ -73,7 +80,7 @@ albums
             </td>
         </tr>
         <tr>
-            <td>Artist Name</td>
+            <td>Artist</td>
             <td>string</td>
             <td>
                 The name of the artist.
