@@ -10,13 +10,13 @@ This code creates the  database  by completing the tasks below;
 # Configuration: import all modules needed
 import os
 import sys
-from sqlalchemy import Table, Column, ForeignKey, Integer, String, DateTime, Text, Float, Boolean
+from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Text, Float, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
-import datetime
+from datetime import date
 import time
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -76,15 +76,15 @@ def determineReleaseDate(release_date):
     """
     release_date = release_date.split('-')
     if len(release_date) == 3:
-        release_date = datetime.datetime(
+        release_date = date(
             int(release_date[0]), int(release_date[1]), int(release_date[2]))
     elif len(release_date) == 2:
-        release_date = datetime.datetime(
+        release_date = date(
             int(release_date[0]), int(release_date[1]), 1)
     elif len(release_date) == 1:
-        release_date = datetime.datetime(int(release_date[0]), 1, 1)
+        release_date = date(int(release_date[0]), 1, 1)
     else:
-        release_date = datetime.datetime(1900, 1, 1)
+        release_date = date(1900, 1, 1)
 
     return release_date
 
@@ -228,7 +228,7 @@ def populateDataManually():
 
     album1 = Album(name="Another Eternity",
                    uri="dummyuri",
-                   release_date=datetime.datetime.utcnow(),
+                   release_date=date.today,
                    artist_id=artist1.id, artist=artist1)
     session.add(album1)
     session.commit()
@@ -266,6 +266,7 @@ def populateDataManually():
     session.add_all(song_objects)
     session.commit()
 
+
 def populatePlaylists():
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
@@ -288,21 +289,20 @@ def populatePlaylists():
     session.add(p3)
     session.commit()
 
+
 def populatePlaylistItems():
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
-
-
-    #ryan
+    # ryan
     pi1 = PlaylistItem(playlist_id=2, song_id=2)
     pi2 = PlaylistItem(playlist_id=2, song_id=15)
     pi3 = PlaylistItem(playlist_id=2, song_id=30)
-    #kaan
+    # kaan
     pi4 = PlaylistItem(playlist_id=1, song_id=153)
     pi5 = PlaylistItem(playlist_id=1, song_id=162)
     pi6 = PlaylistItem(playlist_id=1, song_id=171)
-    #paul
+    # paul
     pi7 = PlaylistItem(playlist_id=3, song_id=265)
     pi8 = PlaylistItem(playlist_id=3, song_id=301)
     pi9 = PlaylistItem(playlist_id=3, song_id=250)
@@ -318,6 +318,7 @@ def populatePlaylistItems():
     session.add(pi9)
 
     session.commit()
+
 
 # If the script is directly executed, populate data in tables
 if __name__ == '__main__':
