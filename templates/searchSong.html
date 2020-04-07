@@ -36,6 +36,7 @@ songs
     <table class="table table-sm table-hover">
         <thead>
             <tr>
+                <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Album</th>
                 <th scope="col">Artist</th>
@@ -51,22 +52,26 @@ songs
             </tr>
         </thead>
         <tbody>
-            {% for song in songs %}
-            <tr>
-                <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
-                <td><a href="{{ song.album.uri }}">{{ song.album.name }}</a></td>
-                <td><a href="{{ song.album.artist.uri }}">{{ song.album.artist.name }}</a></td>
-                <td>{{ song.popularity }}</td>
-                <td>{{ song.duration }}</td>
-                <td>{{ song.time_signature }}</td>
-                <td>{{ song.danceability }}</td>
-                <td>{{ song.tempo }}</td>
-                <td>{{ song.energy }}</td>
-                <td>{{ song.instrumentalness }}</td>
-                <td>{{ song.valence }}</td>
-                <td>{{ song.explicit }}</td>
-            </tr>
-            {% endfor %}
+            <form action="{{url_for('searchSong', playlist_id=playlistName.id)}}" method = 'POST'></form>
+                {% for song in songs %}
+                <tr>
+                    <td><input type="checkbox" value="{{ song.id }}" name="mycheckbox"></td>
+                    <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
+                    <td><a href="{{ song.album.uri }}">{{ song.album.name }}</a></td>
+                    <td><a href="{{ song.album.artist.uri }}">{{ song.album.artist.name }}</a></td>
+                    <td>{{ song.popularity }}</td>
+                    <td>{{ song.duration }}</td>
+                    <td>{{ song.time_signature }}</td>
+                    <td>{{ song.danceability }}</td>
+                    <td>{{ song.tempo }}</td>
+                    <td>{{ song.energy }}</td>
+                    <td>{{ song.instrumentalness }}</td>
+                    <td>{{ song.valence }}</td>
+                    <td>{{ song.explicit }}</td>
+                </tr>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit" value="Add">Add to playlist</button>
+            </form>
         </tbody>
     </table>
     {% endif %}

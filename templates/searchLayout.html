@@ -4,7 +4,7 @@
 <div class="container-fluid">
     {% block header %}{% endblock %}
     <!-- Search Input -->
-    <form action="#" method='POST'>
+    <form action="{{url_for('searchSong', playlist_id=playlistName.id)}}" method='POST'>
         <!-- Row 1 -->
         <div class="row">
             <div class="col">

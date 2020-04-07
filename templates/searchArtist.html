@@ -36,7 +36,7 @@ artists
         <tbody>
             {% for artist in artists %}
             <tr>
-                <td><a href="{{ artist.uri }}">{{ artist.name }}</a></td>
+                <td><a href="/artist/{{ artist.id }}">{{ artist.name }}</a></td>
                 <td>{{ artist.followers }}</td>
                 <td>{{ artist.popularity }}</td>
                 <td>TO BE IMPLEMENTED</td>
