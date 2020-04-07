@@ -182,8 +182,8 @@ def searchAlbum():
         playlists=playlists, albums=albums)
 
 
-@app.route('/playlist/<int:playlist_id>/new/searchsong', methods=['GET', 'POST'])
-def addSongsToPlaylist(playlist_id):
+@app.route('/playlist/<int:playlist_id>/new/searchsong/<song_id_list>', methods=['GET', 'POST'])
+def addSongsToPlaylist(playlist_id,song_id_list):
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
 
@@ -194,17 +194,22 @@ def addSongsToPlaylist(playlist_id):
         print("posttt from addSongstoPlaylist")
         print(request.form.getlist('mycheckbox'))
         flash("capture checkboxesss")
-        return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
+        #return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
+        return "post"
     else:
-        return "get method addSongsToPlaylist"
+        #return "get method addSongsToPlaylist"
+        #song_id_list=request.args.get('song_id_list')
+        print("hello",song_id_list)
+        print(type(song_id_list))
+
+        return "getting it"
         # return render_template( 
         # 'addSongToPlaylist.html',
         # title='Add songs to playlist',
-        # playlists=playlists, playlistName=playlistName, songs=songs)
+        # playlistName=playlistName,playlists=playlists, songs=songs)
 
 
 @app.route('/playlist/<int:playlist_id>/new', methods=['GET', 'POST'])
-
 def searchSong(playlist_id):
     songs = None
     playlists = session.query(Playlist).all()
@@ -218,19 +223,24 @@ def searchSong(playlist_id):
 
         # Gets the song attribute based on the attribute string from the UI.
         if filterAttribute == 'artist':
-            songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
+            songs = session.query(Song.id).join(Album).join(Artist).filter(Artist.name == userText).all()
         elif filterAttribute == 'album':
-            songs = session.query(Song).join(Album).filter(Album.name == userText).all()
+            songs = session.query(Song.id).join(Album).filter(Album.name == userText).all()
         else:
             filterAttribute = getattr(Song, filterAttribute)
             if filterOperator == '>':
-                songs = session.query(Song).filter(filterAttribute > userText).all()
+                songs = session.query(Song.id).filter(filterAttribute > userText).all()
             elif filterOperator == '<':
-                songs = session.query(Song).filter(filterAttribute < userText).all()
+                songs = session.query(Song.id).filter(filterAttribute < userText).all()
             else:
-                songs = session.query(Song).filter(filterAttribute == userText).all()
+                songs = session.query(Song.id).filter(filterAttribute == userText).all()
 
-        return redirect(url_for('addSongsToPlaylist', playlist_id = playlistName.id))
+        song_id_list = []
+        for s in songs:
+            #print(s)
+            song_id_list.append(s.id)
+            
+        return redirect(url_for('addSongsToPlaylist', playlist_id =  playlist_id, song_id_list=song_id_list))
         # return render_template( 
         # 'addSongToPlaylist.html',
         # title='Add songs to playlist',
