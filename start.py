@@ -191,16 +191,18 @@ def searchSong(playlist_id):
         userText = request.form['usrText']
 
         # Gets the song attribute based on the attribute string from the UI.
-        # if filterAttribute == 'artist':
-        #     songs = session.query(Song).filter(Song.album == userText).all()
-        # else:
-        filterAttribute = getattr(Song, filterAttribute)
-        if filterOperator == '>':
-            songs = session.query(Song).filter(filterAttribute > userText).all()
-        elif filterOperator == '<':
-            songs = session.query(Song).filter(filterAttribute < userText).all()
+        if filterAttribute == 'artist':
+            songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
+        elif filterAttribute == 'album':
+            songs = session.query(Song).join(Album).filter(Album.name == userText).all()
         else:
-            songs = session.query(Song).filter(filterAttribute == userText).all()
+            filterAttribute = getattr(Song, filterAttribute)
+            if filterOperator == '>':
+                songs = session.query(Song).filter(filterAttribute > userText).all()
+            elif filterOperator == '<':
+                songs = session.query(Song).filter(filterAttribute < userText).all()
+            else:
+                songs = session.query(Song).filter(filterAttribute == userText).all()
 
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
