@@ -199,14 +199,16 @@ def addSongsToPlaylist(playlist_id,song_id_list):
     else:
         #return "get method addSongsToPlaylist"
         #song_id_list=request.args.get('song_id_list')
+        song_id_list=song_id_list.replace("[","").replace("]","").replace(" ","")
+        song_id_list=song_id_list.split(",")
         print("hello",song_id_list)
-        print(type(song_id_list))
-
-        return "getting it"
-        # return render_template( 
-        # 'addSongToPlaylist.html',
-        # title='Add songs to playlist',
-        # playlistName=playlistName,playlists=playlists, songs=songs)
+        songs = session.query(Song).filter(Song.id.in_(song_id_list)).all()
+        #print(songs)
+        #return "getting it"
+        return render_template( 
+        'addSongToPlaylist.html',
+        title='Add songs to playlist',
+        playlistName=playlistName,playlists=playlists, songs=songs)
 
 
 @app.route('/playlist/<int:playlist_id>/new', methods=['GET', 'POST'])

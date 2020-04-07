@@ -6,7 +6,7 @@
         There were no song results returned.
     </div>
     {% else %}
-    <form action="{{url_for('addSongsToPlaylist', playlist_id=playlistName.id)}}" method = 'POST'></form>
+    <form action="{{url_for('addSongsToPlaylist', playlist_id=playlistName.id, song_id_list=playlistName.id)}}" method = 'POST'></form>
         <table class="table table-sm table-hover">
             <thead>
                 <tr>
