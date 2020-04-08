@@ -25,7 +25,7 @@
             {% for song in songs %}
             <tr>
                 <td><a href="{{ song.Song.uri }}">{{ song.Song.name }}</a></td>
-                <td><a href="/artist/{{ song.Song.album.artist.id }}">{{ song.Song.album.artist.name }}</a></td>
+                <td>{{ song.Song.album.artist.name }}</td>
 
             </tr>
             {% endfor %}

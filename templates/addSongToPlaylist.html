@@ -1,9 +1,54 @@
 {% extends "layout.html" %}
 {% block content %}
-    <!-- Page Content -->
-    <div class="container-fluid">
-        <h1>html for displaying search song results</h1>
-
+<div class="container-fluid">
+    <h1>Search results for {{playlistName.name}}</h1>
+    {% if (songs|length == 0) and (first == False) %}
+    <div class="alert alert-danger" role="alert">
+        There were no song results returned.
     </div>
-    <!-- /#page-content-wrapper -->
+    {% else %}
+    <form action="{{url_for('addSongsToPlaylist', playlist_id=playlistName.id, song_id_list=playlistName.id)}}" method = 'POST'>
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Album</th>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Popularity</th>
+                    <th scope="col">Duration (ms)</th>
+                    <th scope="col">Time Signature</th>
+                    <th scope="col">Danceability</th>
+                    <th scope="col">Tempo</th>
+                    <th scope="col">Energy</th>
+                    <th scope="col">Instrumentalness</th>
+                    <th scope="col">Valence</th>
+                    <th scope="col">Explicit</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for song in songs %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ song.id }}" name="mycheckbox"></td>
+                        <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
+                        <td><a href="/album/{{ song.album.id }}">{{ song.album.name }}</a></td>
+                        <td><a href="/artist/{{ song.album.artist.id }}">{{ song.album.artist.name }}</a></td>
+                        <td>{{ song.popularity }}</td>
+                        <td>{{ song.duration }}</td>
+                        <td>{{ song.time_signature }}</td>
+                        <td>{{ song.danceability }}</td>
+                        <td>{{ song.tempo }}</td>
+                        <td>{{ song.energy }}</td>
+                        <td>{{ song.instrumentalness }}</td>
+                        <td>{{ song.valence }}</td>
+                        <td>{{ song.explicit }}</td>
+                    </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-primary" type="submit" value="Create">Add to playlist</button>
+    </form>
+    {% endif %}
+</div>
+<!-- /#page-content-wrapper -->
 {% endblock content %}
