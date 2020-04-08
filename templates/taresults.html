@@ -2,15 +2,11 @@
 {% block content %}
     <!-- Page Content -->
     <div class="container-fluid">
-        <h1>Songs in {{playlistName.name}}
-        <a href="/playlist/{{ playlistName.id }}/delete/" class="btn btn-secondary btn-sm btn-danger" role="button">Delete</a>
-        <a href="/playlist/{{ playlistName.id }}/edit/" class="btn btn-secondary btn-sm btn-success" role="button">Rename</a>
-        <a href="/playlist/{{ playlistName.id }}/new" class="btn btn-secondary btn-sm btn-success" role="button">Add Songs</a>
-        <a href="/playlist/{{ playlistName.id }}/export/" class="btn btn-secondary btn-sm btn-success" role="button">Export to Spotify</a></h1>
+        <h1>Query results</h1>
         </div>
         {% if songs|length== 0 %}
         <div class="alert alert-danger" role="alert">
-            There are no songs in this album! 
+            There are no results in this query! 
         </div>
         {% else %}
         <table class="table table-sm table-hover">
@@ -25,7 +21,7 @@
             {% for song in songs %}
             <tr>
                 <td><a href="{{ song.Song.uri }}">{{ song.Song.name }}</a></td>
-                <td>{{ song.Song.album.artist.name }}</td>
+                <td><a href="/artist/{{ song.Song.album.artist.id }}">{{ song.Song.album.artist.name }}</a></td>
 
             </tr>
             {% endfor %}

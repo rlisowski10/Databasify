@@ -410,6 +410,25 @@ def albumsJSON():
         result.serialize for result in results]
         )
 
+@app.route('/ta', methods=['GET', 'POST'])
+def ta():
+    playlists = session.query(Playlist).all()
+
+    if request.method == 'POST':
+        songs = session.query(Song.id).join(Album).filter(Album.name == "heartsigh").all()
+        return render_template(
+            'taresults.html',
+            title='query results',
+            playlists=playlists, songs=songs)
+    else:   
+
+        return render_template(
+            'ta.html',
+            title='query options',
+            playlists=playlists)
+
+
+
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'SECRET KEY'

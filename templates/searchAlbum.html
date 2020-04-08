@@ -43,8 +43,8 @@ albums
         <tbody>
             {% for album in albums %}
             <tr>
-                <td><a href="{{ album.uri }}">{{ album.name }}</a></td>
-                <td><a href="{{ album.artist.uri }}">{{ album.artist.name }}</a></td>
+                <td><a href="/album/{{ album.id }}">{{ album.name }}</a></td>
+                <td><a href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a></td>
                 <td>{{ album.release_date }}</td>
                 <td>TO BE IMPLEMENTED</td>
             </tr>
