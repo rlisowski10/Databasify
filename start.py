@@ -259,9 +259,13 @@ def addSongsToPlaylist(playlist_id,song_id_list):
         song_id_list=song_id_list.replace("[","").replace("]","").replace(" ","")
         song_id_list=song_id_list.split(",")
         #print("hello",song_id_list)
-        songs = session.query(Song).filter(Song.id.in_(song_id_list)).all()
-        #print(songs)
-        #return "getting it"
+        
+        # ***This is where the order gets mixed up***
+
+        songs = []
+        for song_id in song_id_list:
+            songs.append(session.query(Song).filter_by(id=song_id).one())
+
         return render_template( 
         'addSongToPlaylist.html',
         title='Add songs to playlist',
@@ -281,75 +285,70 @@ def searchSong(playlist_id):
         userText = request.form['usrText']
         # orderByParam = request.form['orderByParam'].lower().replace(' ', '_')
         # orderByOrder = request.form['orderByOrder']
-        # orderByParam = 'danceability'
-        # orderByOrder = 'ascending'
+        orderByParam = 'danceability'
+        orderByOrder = 'descending'
 
         # Gets the song attribute based on the attribute string from the UI.
-        # if orderByParam == '':
-        #     if filterAttribute == 'artist':
-        #         songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
-        #     elif filterAttribute == 'album':
-        #         songs = session.query(Song).join(Album).filter(Album.name == userText).all()
-        #     else:
-        #         filterAttribute = getattr(Song, filterAttribute)
-        #         if filterOperator == '>':
-        #             songs = session.query(Song).filter(filterAttribute > userText).all()
-        #         elif filterOperator == '<':
-        #             songs = session.query(Song).filter(filterAttribute < userText).all()
-        #         else:
-        #             songs = session.query(Song).filter(filterAttribute == userText).all()
-        # elif orderByOrder == 'ascending':
-        #     orderByParam = getattr(Song, orderByParam)
-        #     if filterAttribute == 'artist':
-        #         songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(orderByParam).all()
-        #     elif filterAttribute == 'album':
-        #         songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(orderByParam).all()
-        #     else:
-        #         filterAttribute = getattr(Song, filterAttribute)
-        #         if filterOperator == '>':
-        #             songs = session.query(Song).filter(filterAttribute > userText).order_by(orderByParam).all()
-        #         elif filterOperator == '<':
-        #             songs = session.query(Song).filter(filterAttribute < userText).order_by(orderByParam).all()
-        #         else:
-        #             songs = session.query(Song).filter(filterAttribute == userText).order_by(orderByParam).all()
-        # else:
-        #     orderByParam = getattr(Song, orderByParam)
-        #     if filterAttribute == 'artist':
-        #         songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(desc(orderByParam)).all()
-        #     elif filterAttribute == 'album':
-        #         songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(desc(orderByParam)).all()
-        #     else:
-        #         filterAttribute = getattr(Song, filterAttribute)
-        #         if filterOperator == '>':
-        #             songs = session.query(Song).filter(filterAttribute > userText).order_by(desc(orderByParam)).all()
-        #         elif filterOperator == '<':
-        #             songs = session.query(Song).filter(filterAttribute < userText).order_by(desc(orderByParam)).all()
-        #         else:
-        #             songs = session.query(Song).filter(filterAttribute == userText).order_by(desc(orderByParam)).all()
-
-        if filterAttribute == 'artist':
-            songs = session.query(Song.id).join(Album).join(Artist).filter(Artist.name == userText).all()
-        elif filterAttribute == 'album':
-            songs = session.query(Song.id).join(Album).filter(Album.name == userText).all()
-        else:
-            filterAttribute = getattr(Song, filterAttribute)
-            if filterOperator == '>':
-                songs = session.query(Song.id).filter(filterAttribute > userText).all()
-            elif filterOperator == '<':
-                songs = session.query(Song.id).filter(filterAttribute < userText).all()
+        if orderByParam == '':
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).all()
             else:
-                songs = session.query(Song.id).filter(filterAttribute == userText).all()
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).all()
+        elif orderByOrder == 'ascending':
+            orderByParam = getattr(Song, orderByParam)
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(orderByParam).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(orderByParam).all()
+            else:
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).order_by(orderByParam).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).order_by(orderByParam).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).order_by(orderByParam).all()
+        else:
+            orderByParam = getattr(Song, orderByParam)
+            if filterAttribute == 'artist':
+                songs = session.query(Song).join(Album).join(Artist).filter(Artist.name == userText).order_by(desc(orderByParam)).all()
+            elif filterAttribute == 'album':
+                songs = session.query(Song).join(Album).filter(Album.name == userText).order_by(desc(orderByParam)).all()
+            else:
+                filterAttribute = getattr(Song, filterAttribute)
+                if filterOperator == '>':
+                    songs = session.query(Song).filter(filterAttribute > userText).order_by(desc(orderByParam)).all()
+                elif filterOperator == '<':
+                    songs = session.query(Song).filter(filterAttribute < userText).order_by(desc(orderByParam)).all()
+                else:
+                    songs = session.query(Song).filter(filterAttribute == userText).order_by(desc(orderByParam)).all()
+
+        # if filterAttribute == 'artist':
+        #     songs = session.query(Song.id).join(Album).join(Artist).filter(Artist.name == userText).all()
+        # elif filterAttribute == 'album':
+        #     songs = session.query(Song.id).join(Album).filter(Album.name == userText).all()
+        # else:
+        #     filterAttribute = getattr(Song, filterAttribute)
+        #     if filterOperator == '>':
+        #         songs = session.query(Song.id).filter(filterAttribute > userText).all()
+        #     elif filterOperator == '<':
+        #         songs = session.query(Song.id).filter(filterAttribute < userText).all()
+        #     else:
+        #         songs = session.query(Song.id).filter(filterAttribute == userText).all()
 
         song_id_list = []
         for s in songs:
-            #print(s)
             song_id_list.append(s.id)
-            
+
         return redirect(url_for('addSongsToPlaylist', playlist_id =  playlist_id, song_id_list=song_id_list))
-        # return render_template( 
-        # 'addSongToPlaylist.html',
-        # title='Add songs to playlist',
-        # playlists=playlists, playlistName=playlistName, songs=songs)
     else:
         return render_template( 
         'searchSong.html',
@@ -372,7 +371,6 @@ def exportPlaylist(playlist_id):
 
         for row in songURIS:
             strOut = strOut + row.Song.uri + ","
-            #print(row.Song.uri)
             uris.append(row.Song.uri)
         # USE uris LIST VARIABLE TO PASS TO SPOTIFY
         return "This page will create a playlist on Spotify with these uris: %s" % strOut
