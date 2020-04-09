@@ -37,7 +37,6 @@ albums
                 <th scope="col">Name</th>
                 <th scope="col">Artist</th>
                 <th scope="col">Release Date</th>
-                <th scope="col">Songs</th>
             </tr>
         </thead>
         <tbody>
@@ -46,7 +45,6 @@ albums
                 <td><a href="/album/{{ album.id }}">{{ album.name }}</a></td>
                 <td><a href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a></td>
                 <td>{{ album.release_date }}</td>
-                <td>TO BE IMPLEMENTED</td>
             </tr>
             {% endfor %}
         </tbody>
