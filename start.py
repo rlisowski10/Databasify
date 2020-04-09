@@ -249,7 +249,9 @@ def addSongsToPlaylist(playlist_id, song_id_list):
 
         songs = []
         for song_id in song_id_list:
-            songs.append(session.query(Song).filter_by(id=song_id).one())
+            result = session.query(Song).filter(Song.id == song_id).all()
+            for song in result:
+                songs.append(song)
 
         return render_template(
             'addSongToPlaylist.html',
