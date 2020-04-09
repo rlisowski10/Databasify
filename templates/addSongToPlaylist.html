@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-fluid">
     <h1>Search results for {{playlistName.name}}</h1>
-    {% if (songs|length == 0) and (first == False) %}
+    {% if (songs|length == 0) %}
     <div class="alert alert-danger" role="alert">
         There were no song results returned.
     </div>

@@ -234,7 +234,6 @@ def addSongsToPlaylist(playlist_id, song_id_list):
 
     if request.method == 'POST':
         songidToBeAdded = request.form.getlist('mycheckbox')
-        print(songidToBeAdded)
         for s in songidToBeAdded:
             pitem = PlaylistItem(playlist_id=playlist_id, song_id=s)
             session.add(pitem)
@@ -403,7 +402,6 @@ def ta():
     if request.method == 'POST':
         songs = session.query(Song).filter_by(album_id=1)
         queryNo = request.form['queryNo']
-        print("------------HELOOOOOO", queryNo)
         return render_template(
             'taresults.html',
             title='query results',
