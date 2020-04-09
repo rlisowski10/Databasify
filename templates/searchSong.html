@@ -49,6 +49,45 @@
                 </div>
             </div>
             <!-- /#row-1-wrapper -->
+
+            <div class="row">
+                <div class="col"><!-- Empty column --></div>
+                <div class="col">
+                    <label>Order by</label>
+                </div>
+                <div class="col">
+                    <select class="custom-select d-block w-100" name="orderByParam">
+                        <option value="">Choose...</option>
+                        <option>Name</option>
+                        <option>Album</option>
+                        <option>Artist</option>
+                        <option>Popularity</option>
+                        <option>Duration</option>
+                        <option>Time Signature</option>
+                        <option>Danceability</option>
+                        <option>Tempo</option>
+                        <option>Energy</option>
+                        <option>Instrumentalness</option>
+                        <option>Valence</option>
+                        <option>Explicit</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="orderByOrder" id="exampleRadios1" value="ascending" checked>
+                        <label class="form-check-label" for="exampleRadios1">
+                          Ascending
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="orderByOrder" id="exampleRadios2" value="descending">
+                        <label class="form-check-label" for="exampleRadios2">
+                          Descending
+                        </label>
+                      </div>
+                </div>
+            </div>
+
             <button class="btn btn-primary" type="submit" value="searchSong">Filter</button>
             <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
