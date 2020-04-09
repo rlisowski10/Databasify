@@ -107,7 +107,7 @@ def deletePlaylist(playlist_id):
 def searchArtist():
     artists = session.query(Artist).all()
     playlists = session.query(Playlist).all()
-
+    
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -153,10 +153,30 @@ def searchArtist():
                 artists = session.query(Artist).filter(
                     filterAttribute == userText).order_by(desc(orderByParam)).all()
 
-    return render_template(
+        return render_template(
+            'searchArtist.html',
+            title='Search Artist',
+            playlists=playlists, artists=artists)
+
+    else:
+        artists = session.query(Artist).all()
+        songCounts = {}
+        for artist in artists:
+            #songCount = Song.query.filter_by(Song.album.artist.id == artist.id ).count()
+            result = (session.query(Song, Album, Artist)
+              .filter(Artist.id == Album.artist_id)
+              .filter(Song.album_id == Album.id)
+              .filter(Artist.id== artist.id)
+              ).all()
+            songCount = len(result)
+
+            songCounts[artist.id] = songCount
+
+        return render_template(
         'searchArtist.html',
         title='Search Artist',
-        playlists=playlists, artists=artists)
+        playlists=playlists, artists=artists, songCounts=songCounts)
+
 
 
 @app.route('/album', methods=['GET', 'POST'])
@@ -417,4 +437,4 @@ def ta():
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'SECRET KEY'
-    app.run(host='127.0.0.1', port=5002)
+    app.run(host='127.0.0.1', port=5001)

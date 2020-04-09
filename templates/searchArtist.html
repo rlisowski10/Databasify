@@ -35,8 +35,7 @@ artists
                 <th scope="col">Name</th>
                 <th scope="col">Followers</th>
                 <th scope="col">Popularity</th>
-                <th scope="col">Albums</th>
-                <th scope="col">Songs</th>
+                <th scope="col">No of Songs in DB</th>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +44,7 @@ artists
                 <td><a href="/artist/{{ artist.id }}">{{ artist.name }}</a></td>
                 <td>{{ artist.followers }}</td>
                 <td>{{ artist.popularity }}</td>
-                <td>TO BE IMPLEMENTED</td>
-                <td>TO BE IMPLEMENTED</td>
+                <td>{{ songCounts[artist.id] }}</td>
             </tr>
             {% endfor %}
         </tbody>
