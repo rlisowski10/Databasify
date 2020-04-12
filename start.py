@@ -421,6 +421,11 @@ def ta():
 
     if request.method == 'POST':
         songs = session.query(Song).filter_by(album_id=1)
+        #with engine.connect() as con:
+        rs = session.execute('SELECT * FROM artist')
+        for row in rs:
+            print(row)
+
         queryNo = request.form['queryNo']
         return render_template(
             'taresults.html',
