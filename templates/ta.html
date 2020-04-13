@@ -22,7 +22,7 @@
                     <div class="card-body">
                     <h5 class="card-title">Intersection example: Find songs with popularity > 50 and energy > 0.5</h5>
                     <input type="hidden" name="name" value = "SELECT * FROM song WHERE song.popularity>50 INTERSECT SELECT * FROM song WHERE song.energy>0.5;">
-                    <textarea class="form-control"  rows="1" placeholder= "SELECT * FROM song WHERE song.popularity>50 INTERSECT SELECT * FROM song WHERE song.energy>0.5;"></textarea>
+                    <textarea class="form-control"  rows="2" placeholder= "SELECT * FROM song WHERE song.popularity>50 INTERSECT SELECT * FROM song WHERE song.energy>0.5;"></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                     <div class="card-body">
                     <h5 class="card-title">Get list of very danceable songs and very happy songs</h5>
                     <input type="hidden" name="name" value = "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;">
-                    <textarea class="form-control"  rows="1" placeholder= "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;"></textarea>
+                    <textarea class="form-control"  rows="2" placeholder= "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;"></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
                     </div>
                 </div>
