@@ -153,10 +153,22 @@ def searchArtist():
                 artists = session.query(Artist).filter(
                     filterAttribute == userText).order_by(desc(orderByParam)).all()
 
+        songCounts = {}
+        for artist in artists:
+            #songCount = Song.query.filter_by(Song.album.artist.id == artist.id ).count()
+            result = (session.query(Song, Album, Artist)
+              .filter(Artist.id == Album.artist_id)
+              .filter(Song.album_id == Album.id)
+              .filter(Artist.id== artist.id)
+              ).all()
+            songCount = len(result)
+
+            songCounts[artist.id] = songCount
+
         return render_template(
             'searchArtist.html',
             title='Search Artist',
-            playlists=playlists, artists=artists)
+            playlists=playlists, artists=artists, songCounts=songCounts)
 
     else:
         artists = session.query(Artist).all()
