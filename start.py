@@ -426,17 +426,27 @@ def ta():
             taQuery = request.form.get("name")
             results = {}
 
-            songs = session.execute(taQuery)
-            for row in songs:
-                #row = (8, 'spotify:track:5IXTT9RvcVupmzLTFqIInj', 8, 'New York', 56, 154960, 0.373, 1, 137.866, 0.449, 1.26e-05, 4, 0.327, 1)
-                results[row[0]] = [row[1], row[2], row[3],row[4]] 
+            qsongs = session.execute(taQuery)
+            # for row in songs:
+            #     #row = (8, 'spotify:track:5IXTT9RvcVupmzLTFqIInj', 8, 'New York', 56, 154960, 0.373, 1, 137.866, 0.449, 1.26e-05, 4, 0.327, 1)
+            #     results[row[0]] = [row[1], row[2], row[3],row[4]] 
             
-            print(results)
+
+            song_id_list = []
+            songs = []
+
+            for s in qsongs:
+                song_id_list.append(s[0])
+            
+            for song_id in song_id_list:
+                result = session.query(Song).filter(Song.id == song_id).all()
+                for song in result:
+                    songs.append(song)
 
             return render_template(
                 'taresults.html',
                 title='query results',
-                playlists=playlists, songs=results)
+                playlists=playlists, songs=songs)
     else:
         playlists = session.query(Playlist).all()
         return render_template(

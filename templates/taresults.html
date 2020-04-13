@@ -7,20 +7,40 @@
            
         <table class="table table-sm table-hover">
             <thead>
-            <tr>
-                <th scope="col">0</th>
-                <th scope="col">1</th>
-                <th scope="col">2</th>
-            </tr>
+                <tr>
+                    
+                    <th scope="col">Name</th>
+                    <th scope="col">Album</th>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Popularity</th>
+                    <th scope="col">Duration (ms)</th>
+                    <th scope="col">Time Signature</th>
+                    <th scope="col">Danceability</th>
+                    <th scope="col">Tempo</th>
+                    <th scope="col">Energy</th>
+                    <th scope="col">Instrumentalness</th>
+                    <th scope="col">Valence</th>
+                    <th scope="col">Explicit</th>
+                </tr>
             </thead>
             <tbody>
-            {% for song in songs %}
-            <tr>
-                <td>{{song}}</td>
-                <td>{{song[0]}}</td>
-                <td>{{song[0]}}</td>
-            </tr>
-            {% endfor %}
+                    {% for song in songs %}
+                    <tr>
+                        
+                        <td><a href="{{ song.uri }}">{{ song.name }}</a></td>
+                        <td><a href="/album/{{ song.album.id }}">{{ song.album.name }}</a></td>
+                        <td><a href="/artist/{{ song.album.artist.id }}">{{ song.album.artist.name }}</a></td>
+                        <td>{{ song.popularity }}</td>
+                        <td>{{ song.duration }}</td>
+                        <td>{{ song.time_signature }}</td>
+                        <td>{{ song.danceability }}</td>
+                        <td>{{ song.tempo }}</td>
+                        <td>{{ song.energy }}</td>
+                        <td>{{ song.instrumentalness }}</td>
+                        <td>{{ song.valence }}</td>
+                        <td>{{ song.explicit }}</td>
+                    </tr>
+                    {% endfor %}
             </tbody>
         </table>
         
