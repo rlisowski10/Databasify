@@ -55,13 +55,16 @@ def populateArtist(session, artist_name, album_name):
     artist = sp.artist(album['artists'][0]['uri'])
 
     # Populate artist information based on the album search.
-    # TODO: Implement code to deal with an existing artist.
-    artist_db_obj = Artist(name=artist['name'],
-                           uri=artist['uri'],
-                           popularity=artist['popularity'],
-                           followers=artist['followers']['total'])
-    session.add(artist_db_obj)
-    session.commit()
+    existing_artist = session.query(Artist).filter(Artist.uri==artist['uri']).first()
+    if (existing_artist is None):
+        artist_db_obj = Artist(name=artist['name'],
+                            uri=artist['uri'],
+                            popularity=artist['popularity'],
+                            followers=artist['followers']['total'])
+        session.add(artist_db_obj)
+        session.commit()
+    else:
+        artist_db_obj = existing_artist
 
     populateAlbum(session, artist_db_obj, album)
 
@@ -158,6 +161,9 @@ def populateDataFromSpotify():
     populate_albums = []
     # Ryan
     populate_albums.append(('st vincent', 'masseduction'))
+    populate_albums.append(('st vincent', 'strange mercy'))
+    populate_albums.append(('st vincent', 'marry me'))
+    populate_albums.append(('st vincent', 'actor'))
     populate_albums.append(('air', 'moon safari'))
     populate_albums.append(('wilco', 'yankee hotel foxtrot'))
     populate_albums.append(('stone roses', 'stone roses'))
@@ -173,6 +179,8 @@ def populateDataFromSpotify():
     populate_albums.append(('allie x', 'cape god'))
     populate_albums.append(('ionnalee', 'everyone afraid to be forgotten'))
     populate_albums.append(('janelle monae', 'dirty computer'))
+    populate_albums.append(('janelle monae', 'the archandroid'))
+    populate_albums.append(('janelle monae', 'the electric lady'))
     populate_albums.append(('goldfrapp', 'supernature'))
     populate_albums.append(('austra', 'future politics'))
     populate_albums.append(('marina', 'love + fear'))
@@ -181,6 +189,9 @@ def populateDataFromSpotify():
     # Paul
     populate_albums.append(('still woozy', 'lately ep'))
     populate_albums.append(('vampire weekend', 'vampire weekend'))
+    populate_albums.append(('vampire weekend', 'contra'))
+    populate_albums.append(('vampire weekend', 'modern vampires of the city'))
+    populate_albums.append(('vampire weekend', 'father of the bride'))
     populate_albums.append(('fleet foxes', 'fleet foxes'))
     populate_albums.append(('alvvays', 'antisocialites'))
     populate_albums.append(('cage the elephant', 'melophobia'))
