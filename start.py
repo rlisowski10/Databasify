@@ -417,22 +417,28 @@ def albumsJSON():
 
 @app.route('/ta', methods=['GET', 'POST'])
 def ta():
-    playlists = session.query(Playlist).all()
-
     if request.method == 'POST':
-        songs = session.query(Song).filter_by(album_id=1)
+        playlists = session.query(Playlist).all()
+        #songs = session.query(Song).filter_by(album_id=1)
         #with engine.connect() as con:
-        rs = session.execute('SELECT * FROM artist')
-        for row in rs:
-            print(row)
 
-        queryNo = request.form['queryNo']
-        return render_template(
-            'taresults.html',
-            title='query results',
-            playlists=playlists, songs=songs)
+        if request.form.get("name"):
+            taQuery = request.form.get("name")
+            results = {}
+
+            songs = session.execute(taQuery)
+            for row in songs:
+                #row = (8, 'spotify:track:5IXTT9RvcVupmzLTFqIInj', 8, 'New York', 56, 154960, 0.373, 1, 137.866, 0.449, 1.26e-05, 4, 0.327, 1)
+                results[row[0]] = [row[1], row[2], row[3],row[4]] 
+            
+            print(results)
+
+            return render_template(
+                'taresults.html',
+                title='query results',
+                playlists=playlists, songs=results)
     else:
-
+        playlists = session.query(Playlist).all()
         return render_template(
             'ta.html',
             title='query options',

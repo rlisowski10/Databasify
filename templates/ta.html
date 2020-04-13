@@ -3,12 +3,13 @@
     <!-- Page Content -->
     <div class="container-fluid">
         <h1>Query options</h1>
-        <form action="{{url_for('ta')}}" method = 'POST'>
+        <form action="{{url_for('ta')}}" method = 'POST' >
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">Simple select query</h5>
-                    <input class="form-control" name="queryNo" type="text" placeholder="SELECT * FROM SONG;" readonly>
+                    <h5 class="card-title">MINUS query (called EXCEPT in sqlite) where only the most vile songs are left over for Masseduction</h5>
+                    <input type="hidden" name="name" value = "SELECT * FROM song WHERE song.album_id=1 EXCEPT SELECT * FROM song WHERE song.album_id=1 AND song.explicit=0;">
+                    <textarea class="form-control"  rows="2" placeholder= "SELECT * FROM song WHERE song.album_id=1 EXCEPT SELECT * FROM song WHERE song.album_id=1 AND song.explicit=0;"></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
                     </div>
                 </div>
@@ -19,8 +20,22 @@
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">Another query</h5>
-                    <input class="form-control" name="queryNo" type="text" placeholder="SELECT ID FROM SONG;" readonly>
+                    <h5 class="card-title">Intersection example: Find songs with popularity > 50 and energy > 0.5</h5>
+                    <input type="hidden" name="name" value = "SELECT * FROM song WHERE song.popularity>50 INTERSECT SELECT * FROM song WHERE song.energy>0.5;">
+                    <textarea class="form-control"  rows="1" placeholder= "SELECT * FROM song WHERE song.popularity>50 INTERSECT SELECT * FROM song WHERE song.energy>0.5;"></textarea>
+                    <button type="submit" class="btn btn-primary">Execute</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <form action="{{url_for('ta')}}" method = 'POST' >
+            <div class="form-group">
+                <div class="card w-75">
+                    <div class="card-body">
+                    <h5 class="card-title">Get list of very danceable songs and very happy songs</h5>
+                    <input type="hidden" name="name" value = "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;">
+                    <textarea class="form-control"  rows="1" placeholder= "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;"></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
                     </div>
                 </div>

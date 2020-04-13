@@ -4,29 +4,26 @@
     <div class="container-fluid">
         <h1>Query results</h1>
         </div>
-        {% if songs.count()== 0 %}
-        <div class="alert alert-danger" role="alert">
-            There are no results in this query! 
-        </div>
-        {% else %}
+           
         <table class="table table-sm table-hover">
             <thead>
             <tr>
-                <th scope="col">Song Name</th>
-                <th scope="col">Artist Name</th>
+                <th scope="col">0</th>
+                <th scope="col">1</th>
+                <th scope="col">2</th>
             </tr>
             </thead>
             <tbody>
-
             {% for song in songs %}
             <tr>
-                <td>{{song.name}}</td>
-                <td>{{song.album.artist.name}}</td>
+                <td>{{song}}</td>
+                <td>{{song[0]}}</td>
+                <td>{{song[0]}}</td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
-        {% endif %}
+        
     </div>
     <!-- /#page-content-wrapper -->
 {% endblock content %}
