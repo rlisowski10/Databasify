@@ -1,3 +1,8 @@
+'''
+This code defines the object relational model classes that sqlalchemy uses.
+Each class maps to a table in the database.
+'''
+
 # Create the sqlite database and map python objects
 # Configuration: import all modules needed
 import os

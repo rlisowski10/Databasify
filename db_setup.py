@@ -4,10 +4,10 @@ This code creates the  database  by completing the tasks below;
 - Maps python objects to those columns for CRUD operations
 - Populates some data within those tables.
 
+Note: Spotify credentials (Client ID and Client Secret) should be added as System Variables.
+      Client ID as SPOTIPY_CLIENT_ID and Client Secret as SPOTIPY_CLIENT_SECRET
 '''
 
-# Create the sqlite database and map python objects
-# Configuration: import all modules needed
 import os
 import sys
 from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Text, Float, Boolean
@@ -20,8 +20,6 @@ from datetime import date
 import time
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-# Note that Spotify credentials (Client ID and Client Secret) should be added as System Variables.
-# Client ID as SPOTIPY_CLIENT_ID and Client Secret as SPOTIPY_CLIENT_SECRET
 
 # Configuration: Create the database and tables
 engine = create_engine('sqlite:///spotify.db')
@@ -55,12 +53,13 @@ def populateArtist(session, artist_name, album_name):
     artist = sp.artist(album['artists'][0]['uri'])
 
     # Populate artist information based on the album search.
-    existing_artist = session.query(Artist).filter(Artist.uri==artist['uri']).first()
+    existing_artist = session.query(Artist).filter(
+        Artist.uri == artist['uri']).first()
     if (existing_artist is None):
         artist_db_obj = Artist(name=artist['name'],
-                            uri=artist['uri'],
-                            popularity=artist['popularity'],
-                            followers=artist['followers']['total'])
+                               uri=artist['uri'],
+                               popularity=artist['popularity'],
+                               followers=artist['followers']['total'])
         session.add(artist_db_obj)
         session.commit()
     else:
@@ -159,7 +158,8 @@ def populateDataFromSpotify():
     # Currently, adding more than one album from the same artist creates
     # duplicate artists. This will have to be dealt with.
     populate_albums = []
-    # Ryan
+
+    # Ryan's albums.
     populate_albums.append(('st vincent', 'masseduction'))
     populate_albums.append(('st vincent', 'strange mercy'))
     populate_albums.append(('st vincent', 'marry me'))
@@ -173,7 +173,8 @@ def populateDataFromSpotify():
     populate_albums.append(('daft punk', 'random access memories'))
     populate_albums.append(('dan deacon', 'mystic familiar'))
     populate_albums.append(('cut copy', 'in ghost colours'))
-    # Kaan
+
+    # Kaan's albums.
     populate_albums.append(('iamx', 'metanoia'))
     populate_albums.append(('kim petras', 'turn off the light'))
     populate_albums.append(('allie x', 'cape god'))
@@ -186,7 +187,8 @@ def populateDataFromSpotify():
     populate_albums.append(('marina', 'love + fear'))
     populate_albums.append(('morcheeba', 'blood like lemonade'))
     populate_albums.append(('purity ring', 'another eternity'))
-    # Paul
+
+    # Paul's albums.
     populate_albums.append(('still woozy', 'lately ep'))
     populate_albums.append(('vampire weekend', 'vampire weekend'))
     populate_albums.append(('vampire weekend', 'contra'))
@@ -223,8 +225,7 @@ def populateDataManually():
     # you can revert all of them back to the last commit by calling session.rollback()
     session = DBSession()
 
-    # Initial dummy  data. #TO BE REPLACED with spotify API json
-
+    # Initial dummy data.
     user1 = User(email="kaan@kaan.ca", password="1234")
     user2 = User(email="ryan@ryan.ca", password="1234")
     user3 = User(email="paul@paul.ca", password="1234")
@@ -243,14 +244,6 @@ def populateDataManually():
                    artist_id=artist1.id, artist=artist1)
     session.add(album1)
     session.commit()
-
-    # song1 = Song(uri="dummyuri",track_number=1,name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0,time_signature=100,valence=1.0, album_id=album1.id, album=album1, playlist_id=0)
-    # session.add(song1)
-    # session.commit()
-
-#     plist1 = Playlist(name="kaans playlist", user_id=user1.id, user=user1)
-#     session.add(plist1)
-#     session.commit()
 
     song_objects = [
         Song(uri="dummyuri", track_number=1, name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False,
@@ -279,6 +272,8 @@ def populateDataManually():
 
 
 def populatePlaylists():
+    """Populates the playlist tables with dummy data.
+    """
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
@@ -302,18 +297,23 @@ def populatePlaylists():
 
 
 def populatePlaylistItems():
+    """Populates the playlistItem tables with dummy data.
+    """
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
-    # ryan
+
+    # Ryan's playlist items.
     pi1 = PlaylistItem(playlist_id=2, song_id=2)
     pi2 = PlaylistItem(playlist_id=2, song_id=15)
     pi3 = PlaylistItem(playlist_id=2, song_id=30)
-    # kaan
+
+    # Kaan's playlist items.
     pi4 = PlaylistItem(playlist_id=1, song_id=153)
     pi5 = PlaylistItem(playlist_id=1, song_id=162)
     pi6 = PlaylistItem(playlist_id=1, song_id=171)
-    # paul
+
+    # Paul's playlist items.
     pi7 = PlaylistItem(playlist_id=3, song_id=265)
     pi8 = PlaylistItem(playlist_id=3, song_id=301)
     pi9 = PlaylistItem(playlist_id=3, song_id=250)
