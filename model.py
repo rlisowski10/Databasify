@@ -13,26 +13,17 @@ from datetime import date
 # Configuration: Create instance of declarative base (class code will inherit this)
 Base = declarative_base()
 
-# #association tables
-# playlist_association = Table('playlist_item', Base.metadata,
-#     Column('playlist_id', Integer, ForeignKey('song.playlist_id')),
-#     Column('id', Integer, ForeignKey('playlist.id'))
-# )
-
-# # featuring_association = Table('featuring_item', Base.metadata,
-# #     Column('song_id', Integer, ForeignKey('song.id')),
-# #     Column('artist_id', Integer, ForeignKey('artist.id'))
-# # )
-
-
-# Class: Representation of table as a python class, extends the Base class
-
+# Representation of the user database table as a python class.
 class User(Base):
     __tablename__ = 'user'
+
+    # id is auto-incremented.
     id = Column(Integer, primary_key=True)
     email = Column(String(150), nullable=False)
     password = Column(String(150), nullable=False)
 
+
+# Representation of the playlist table and relationship as a python class.
 class Playlist(Base):
     __tablename__ = 'playlist'
 
@@ -42,26 +33,29 @@ class Playlist(Base):
 
     user = relationship(User)
 
+
+# Representation of the artist table as a python class.
 class Artist(Base):
-    __tablename__ = 'artist'  # Table in the database
+    __tablename__ = 'artist'
 
-    # Mapper: Maps python objects to columns in the database
-    id = Column(Integer, primary_key=True)  # auto incremented
-    uri = Column(String(50), nullable=False) #spotify:artist:6rqhFgbbKwnb9MLmUQDhG6
+    id = Column(Integer, primary_key=True)
+    uri = Column(String(50), nullable=False)
     name = Column(String(150), nullable=False)
-    popularity = Column(Integer, nullable=False) #popularity of the artist
-    followers = Column(Integer, nullable=False) #number of spotify followers
+    popularity = Column(Integer, nullable=False)
+    followers = Column(Integer, nullable=False)
 
+
+# Representation of the album table and relationship as a python class.
 class Album(Base):
     __tablename__ = 'album'
 
-    id = Column(Integer, primary_key=True)  # auto incremented
-    uri = Column(String(50), nullable=False)# spotify:album:6rqhFgbbKwnb9MLmUQDhG6
+    id = Column(Integer, primary_key=True)
+    uri = Column(String(50), nullable=False)
     name = Column(String(150), nullable=False)
     release_date = Column(Date, nullable=False)
     artist_id = Column(Integer, ForeignKey('artist.id'), nullable=False)
 
-    artist = relationship(Artist, backref="artist") 
+    artist = relationship(Artist, backref="artist")
 
     # JSON objects in a serializable format
     @property
@@ -74,29 +68,36 @@ class Album(Base):
             'artist_id': self.artist_id,
         }
 
+
+# Representation of the playlist item table and relationship as a python class.
 class PlaylistItem(Base):
     __tablename__ = 'playlist_item'
-    id = Column(Integer, primary_key=True)  # auto incremented
+
+    id = Column(Integer, primary_key=True)
     playlist_id = Column(Integer, ForeignKey('playlist.id'), nullable=False)
     song_id = Column(Integer, ForeignKey('song.id'), nullable=False)
 
     playlist = relationship(Playlist, backref="playlist")
 
+
+# Representation of the featuring item table and relationship as a python class.
 class FeaturingItem(Base):
     __tablename__ = 'featuring_item'
-    id = Column(Integer, primary_key=True)  # auto incremented
+
+    id = Column(Integer, primary_key=True)
     artist_id = Column(Integer, ForeignKey('artist.id'), nullable=False)
     song_id = Column(Integer, ForeignKey('song.id'), nullable=False)
 
     featuringArtist = relationship(Artist, backref="featuringArtist")
 
 
+# Representation of the song item table and relationship as a python class.
 class Song(Base):
     __tablename__ = 'song'
 
     id = Column(Integer, primary_key=True)
-    uri = Column(String(50), nullable=False) #spotify:track:6rqhFgbbKwnb9MLmUQDhG6
-    track_number = Column(Integer, nullable=True) #order it appears on the album
+    uri = Column(String(50), nullable=False)
+    track_number = Column(Integer, nullable=True)
     name = Column(String(250), nullable=False)
     popularity = Column(Integer, nullable=True)
     duration = Column(Integer, nullable=False)
@@ -108,10 +109,5 @@ class Song(Base):
     time_signature = Column(Integer, nullable=True)
     valence = Column(Float, nullable=True)
     album_id = Column(Integer, ForeignKey('album.id'), nullable=False)
-    #playlist_id = Column(Integer, ForeignKey(Playlist.id), nullable=True)
 
     album = relationship(Album, backref="album")
-
-    #playlists = relationship(Playlist, backref="playlist")
-    #artists = relationship(Artist, secondary=featuring_association, backref="featuring")
-
