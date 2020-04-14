@@ -6,20 +6,23 @@ from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
 import json
 app = Flask(__name__)
 
+# Configuration: Connect to the existing database
 engine = create_engine('sqlite:///spotify.db',
                        connect_args={'check_same_thread': False}, echo=True)
 Base.metadata.bind = engine
 
+# Configuration: Start a database session.
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# welcome page
+# Welcome page.
 @app.route('/', methods=['GET'])
 def index():
     playlists = session.query(Playlist).all()
     return render_template('index.html', title='Playlists', playlists=playlists)
 
 
+# Shows the songs for an album.
 @app.route('/album/<int:album_id>/', methods=['GET'])
 def showSongs(album_id):
     albumName = session.query(Album).filter_by(id=album_id).one()
@@ -32,6 +35,7 @@ def showSongs(album_id):
         albumName=albumName, playlists=playlists)
 
 
+# Shows the albums for an artist.
 @app.route('/artist/<int:artist_id>/', methods=['GET'])
 def showAlbum(artist_id):
     artistName = session.query(Artist).filter_by(id=artist_id).one()
@@ -44,6 +48,7 @@ def showAlbum(artist_id):
         artistName=artistName, playlists=playlists)
 
 
+# Shows the songs in the playlist.
 @app.route('/playlist/<int:playlist_id>/', methods=['GET'])
 def showPlayListsSongs(playlist_id):
     result = (session.query(PlaylistItem, Playlist, Song)
@@ -57,6 +62,7 @@ def showPlayListsSongs(playlist_id):
     return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, songs=result, playlists=playlists)
 
 
+# Creates a new playlist for the user.
 @app.route('/playlist/new/', methods=['GET', 'POST'])
 def newPlaylist():
     if request.method == 'POST':
@@ -77,7 +83,8 @@ def newPlaylist():
             title='Create a playlist',
             playlists=playlists, users=users)
 
-# DELETE playlist
+
+# Deletes a playlist.
 @app.route('/playlist/<int:playlist_id>/delete/', methods=['GET', 'POST'])
 def deletePlaylist(playlist_id):
     playlists = session.query(Playlist).all()
@@ -103,11 +110,12 @@ def deletePlaylist(playlist_id):
             playlists=playlists)
 
 
+# Performs a search of the artists.
 @app.route('/artist', methods=['GET', 'POST'])
 def searchArtist():
     artists = session.query(Artist).all()
     playlists = session.query(Playlist).all()
-    
+
     if request.method == 'POST':
         # Get all user-provided values from the UI.
         filterAttribute = request.form['attribute'].lower().replace(' ', '_')
@@ -153,14 +161,14 @@ def searchArtist():
                 artists = session.query(Artist).filter(
                     filterAttribute == userText).order_by(desc(orderByParam)).all()
 
+        # Gets a count of songs for each artist.
         songCounts = {}
         for artist in artists:
-            #songCount = Song.query.filter_by(Song.album.artist.id == artist.id ).count()
             result = (session.query(Song, Album, Artist)
-              .filter(Artist.id == Album.artist_id)
-              .filter(Song.album_id == Album.id)
-              .filter(Artist.id== artist.id)
-              ).all()
+                      .filter(Artist.id == Album.artist_id)
+                      .filter(Song.album_id == Album.id)
+                      .filter(Artist.id == artist.id)
+                      ).all()
             songCount = len(result)
 
             songCounts[artist.id] = songCount
@@ -172,25 +180,26 @@ def searchArtist():
 
     else:
         artists = session.query(Artist).all()
+
+        # Gets a count of songs for each artist.
         songCounts = {}
         for artist in artists:
-            #songCount = Song.query.filter_by(Song.album.artist.id == artist.id ).count()
             result = (session.query(Song, Album, Artist)
-              .filter(Artist.id == Album.artist_id)
-              .filter(Song.album_id == Album.id)
-              .filter(Artist.id== artist.id)
-              ).all()
+                      .filter(Artist.id == Album.artist_id)
+                      .filter(Song.album_id == Album.id)
+                      .filter(Artist.id == artist.id)
+                      ).all()
             songCount = len(result)
 
             songCounts[artist.id] = songCount
 
         return render_template(
-        'searchArtist.html',
-        title='Search Artist',
-        playlists=playlists, artists=artists, songCounts=songCounts)
+            'searchArtist.html',
+            title='Search Artist',
+            playlists=playlists, artists=artists, songCounts=songCounts)
 
 
-
+# Performs a search of the albums.
 @app.route('/album', methods=['GET', 'POST'])
 def searchAlbum():
     albums = session.query(Album).all()
@@ -259,12 +268,14 @@ def searchAlbum():
         playlists=playlists, albums=albums)
 
 
+# Adds selected songs to a playlist.
 @app.route('/playlist/<int:playlist_id>/new/searchsong/<song_id_list>', methods=['GET', 'POST'])
 def addSongsToPlaylist(playlist_id, song_id_list):
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
 
     if request.method == 'POST':
+        # Adds all selected songs (checked boxes) to the playlist.
         songidToBeAdded = request.form.getlist('mycheckbox')
         for s in songidToBeAdded:
             pitem = PlaylistItem(playlist_id=playlist_id, song_id=s)
@@ -274,6 +285,7 @@ def addSongsToPlaylist(playlist_id, song_id_list):
         flash("Songs added to the playlist")
         return redirect(url_for('showPlayListsSongs', playlist_id=playlistName.id))
     else:
+        # Shows all queried songs for the user to potentially add to the playlist.
         song_id_list = song_id_list.replace(
             "[", "").replace("]", "").replace(" ", "")
         song_id_list = song_id_list.split(",")
@@ -290,6 +302,7 @@ def addSongsToPlaylist(playlist_id, song_id_list):
             playlistName=playlistName, playlists=playlists, songs=songs)
 
 
+# Searches for songs based on the user's chosen filter parameters.
 @app.route('/playlist/<int:playlist_id>/new', methods=['GET', 'POST'])
 def searchSong(playlist_id):
     songs = None
@@ -362,6 +375,7 @@ def searchSong(playlist_id):
                     songs = session.query(Song).filter(
                         filterAttribute == userText).order_by(desc(orderByParam)).all()
 
+        # Creates a list of songs to be displayed in the filter results page.
         song_id_list = []
         for s in songs:
             song_id_list.append(s.id)
@@ -373,7 +387,8 @@ def searchSong(playlist_id):
             title='Search Songs',
             playlists=playlists, playlistName=playlistName, songs=songs)
 
-# xport playlist
+
+# Exports a playlist (currently just as a list of song uris).
 @app.route('/playlist/<int:playlist_id>/export/', methods=['GET', 'POST'])
 def exportPlaylist(playlist_id):
     if request.method == 'POST':
@@ -390,10 +405,10 @@ def exportPlaylist(playlist_id):
         for row in songURIS:
             strOut = strOut + row.Song.uri + ","
             uris.append(row.Song.uri)
-        # USE uris LIST VARIABLE TO PASS TO SPOTIFY
+
         return "This page will create a playlist on Spotify with these uris: %s" % strOut
 
-# Route for UPDATE playlist
+# Allows the user to rename the playlist. 
 @app.route('/playlist/<int:playlist_id>/edit/', methods=['GET', 'POST'])
 def editPlaylist(playlist_id):
     playlists = session.query(Playlist).all()
@@ -418,7 +433,8 @@ def editPlaylist(playlist_id):
             editedPlaylist=editedPlaylist,
             playlistName=playlistName)
 
-# JSON API endpoint for getting all albums
+
+# JSON API endpoint for getting all albums.
 @app.route('/album/JSON')
 def albumsJSON():
     results = session.query(Album).all()
@@ -427,29 +443,24 @@ def albumsJSON():
     )
 
 
+# Displays additional SQL queries to meet project requirements.
 @app.route('/ta', methods=['GET', 'POST'])
 def ta():
     if request.method == 'POST':
         playlists = session.query(Playlist).all()
-        #songs = session.query(Song).filter_by(album_id=1)
-        #with engine.connect() as con:
 
         if request.form.get("name"):
             taQuery = request.form.get("name")
             results = {}
 
             qsongs = session.execute(taQuery)
-            # for row in songs:
-            #     #row = (8, 'spotify:track:5IXTT9RvcVupmzLTFqIInj', 8, 'New York', 56, 154960, 0.373, 1, 137.866, 0.449, 1.26e-05, 4, 0.327, 1)
-            #     results[row[0]] = [row[1], row[2], row[3],row[4]] 
-            
 
             song_id_list = []
             songs = []
 
             for s in qsongs:
                 song_id_list.append(s[0])
-            
+
             for song_id in song_id_list:
                 result = session.query(Song).filter(Song.id == song_id).all()
                 for song in result:
@@ -467,6 +478,7 @@ def ta():
             playlists=playlists)
 
 
+# The main function for the app.
 if __name__ == '__main__':
     app.debug = True
     app.secret_key = 'SECRET KEY'

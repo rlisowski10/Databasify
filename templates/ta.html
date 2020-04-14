@@ -7,7 +7,7 @@
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">MINUS query (called EXCEPT in sqlite) where only the most vile songs are left over for Masseduction</h5>
+                    <h5 class="card-title">Minus example: Note that this is called EXCEPT in sqlite.</h5>
                     <input type="hidden" name="name" value = "SELECT * FROM song WHERE song.album_id=1 EXCEPT SELECT * FROM song WHERE song.album_id=1 AND song.explicit=0;">
                     <textarea class="form-control"  rows="2" placeholder= "SELECT * FROM song WHERE song.album_id=1 EXCEPT SELECT * FROM song WHERE song.album_id=1 AND song.explicit=0;" readonly></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
@@ -33,7 +33,7 @@
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">Get list of very danceable songs and very happy songs</h5>
+                    <h5 class="card-title">Union example: Get list of very danceable songs and very happy songs</h5>
                     <input type="hidden" name="name" value = "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;">
                     <textarea class="form-control"  rows="2" placeholder= "SELECT * FROM song WHERE danceability>0.8 UNION SELECT * FROM song WHERE valence>0.8;" readonly></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
@@ -46,7 +46,7 @@
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">Full outer join</h5>
+                    <h5 class="card-title">Full outer join example: Note that 'full outer join' is not supported by sqlite. This query emulates it.</h5>
                     <input type="hidden" name="name" value = "SELECT song.* FROM song LEFT JOIN album ON song.album_id=album.id WHERE song.album_id=1 UNION ALL SELECT song.* FROM album LEFT JOIN song ON song.album_id=album.id WHERE song.album_id=2;">
                     <textarea class="form-control"  rows="3" placeholder= "SELECT song.* FROM song LEFT JOIN album ON song.album_id=album.id WHERE song.album_id=1 UNION ALL SELECT song.* FROM album LEFT JOIN song ON song.album_id=album.id WHERE song.album_id=2;" readonly></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
@@ -59,7 +59,7 @@
             <div class="form-group">
                 <div class="card w-75">
                     <div class="card-body">
-                    <h5 class="card-title">Left join with Alias example use</h5>
+                    <h5 class="card-title">Left join example: Also includes an example of Alias.</h5>
                     <input type="hidden" name="name" value = "SELECT s.*, a.name FROM song s LEFT JOIN album a ON s.album_id=a.id;">
                     <textarea class="form-control"  rows="3" placeholder= "SELECT s.*, a.name FROM song s LEFT JOIN album a ON s.album_id=a.id;" readonly></textarea>
                     <button type="submit" class="btn btn-primary">Execute</button>
@@ -67,7 +67,6 @@
                 </div>
             </div>
         </form>
-
         
         <form action="{{url_for('ta')}}" method = 'POST' >
             <div class="form-group">
