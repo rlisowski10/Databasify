@@ -55,6 +55,19 @@
             </div>
         </form>
 
+        <form action="{{url_for('ta')}}" method = 'POST' >
+            <div class="form-group">
+                <div class="card w-75">
+                    <div class="card-body">
+                    <h5 class="card-title">Left join with Alias example use</h5>
+                    <input type="hidden" name="name" value = "SELECT s.*, a.name FROM song s LEFT JOIN album a ON s.album_id=a.id;">
+                    <textarea class="form-control"  rows="3" placeholder= "SELECT s.*, a.name FROM song s LEFT JOIN album a ON s.album_id=a.id;" readonly></textarea>
+                    <button type="submit" class="btn btn-primary">Execute</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
         
         <form action="{{url_for('ta')}}" method = 'POST' >
             <div class="form-group">
