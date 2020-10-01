@@ -4,7 +4,7 @@ Databasify is a web application written with Flask and Bootstrap that can downlo
 ## Screenshots
 ![Search Results](https://github.com/rlisowski10/Databasify/tree/master/screenshots/SearchResults.PNG)
 
-## Tech/framework used
+## Tech and Frameworks used
 <b>Built with:</b>
 - [Flask](https://pypi.org/project/Flask/)
 - [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
