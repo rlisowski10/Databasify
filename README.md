@@ -29,7 +29,7 @@ Databasify is a web application written with Flask and Bootstrap that can downlo
 - Install [SQLAlchemy](https://pypi.org/project/SQLAlchemy/) using PIP install
 - Install [SQLite](https://www.sqlite.org/index.html) for your system
 
-## How to use?
+## How to Run
 <b>To run the app:</b>
 - Open the project in an editor such as VSCode
 - Open start.py and run the file
