@@ -1,4 +1,4 @@
-## Databasify
+# Databasify
 Databasify is a web application written with Flask and Bootstrap that can download albums using the Spotify API, and can generate custom playlists for a user based on a number of song metrics beyond those shown in the Spotify app.
  
 ## Screenshots
@@ -8,7 +8,7 @@ Databasify is a web application written with Flask and Bootstrap that can downlo
 - ![Song Filter Results](https://github.com/rlisowski10/Databasify/tree/master/screenshots/Screenshot_3.png)
 - ![Songs in playlist](https://github.com/rlisowski10/Databasify/tree/master/screenshots/Screenshot_4.png)
 
-## Tech and Frameworks used
+## Tech and Frameworks
 <b>Built with:</b>
 - [Flask](https://pypi.org/project/Flask/)
 - [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
