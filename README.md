@@ -30,7 +30,7 @@ Databasify is a web application written with Flask and Bootstrap that can downlo
 - Open the project in an editor such as VSCode
 - Open start.py and run the file
 - Follow the local link in the terminal to open the web application
-- Check out what the app has to offer
+- Explore what the app has to offer!
 
 ## License
 MIT © [rlisowski10](https://github.com/rlisowski10/)
