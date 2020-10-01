@@ -3,7 +3,6 @@ from flask import request, redirect, url_for, flash, jsonify
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
-import json
 app = Flask(__name__)
 
 # Configuration: Connect to the existing database
@@ -14,6 +13,7 @@ Base.metadata.bind = engine
 # Configuration: Start a database session.
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
+
 
 # Welcome page.
 @app.route('/', methods=['GET'])
@@ -59,7 +59,8 @@ def showPlayListsSongs(playlist_id):
 
     playlists = session.query(Playlist).all()
     playlistName = session.query(Playlist).filter_by(id=playlist_id).one()
-    return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, songs=result, playlists=playlists)
+    return render_template('playlistSongs.html', title='Songs', playlistName=playlistName, songs=result,
+                           playlists=playlists)
 
 
 # Creates a new playlist for the user.
@@ -408,7 +409,9 @@ def exportPlaylist(playlist_id):
 
         return "This page will create a playlist on Spotify with these uris: %s" % strOut
 
-# Allows the user to rename the playlist. 
+# Allows the user to rename the playlist.
+
+
 @app.route('/playlist/<int:playlist_id>/edit/', methods=['GET', 'POST'])
 def editPlaylist(playlist_id):
     playlists = session.query(Playlist).all()
@@ -451,7 +454,6 @@ def ta():
 
         if request.form.get("name"):
             taQuery = request.form.get("name")
-            results = {}
 
             qsongs = session.execute(taQuery)
 

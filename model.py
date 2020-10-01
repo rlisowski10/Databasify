@@ -5,18 +5,15 @@ Each class maps to a table in the database.
 
 # Create the sqlite database and map python objects
 # Configuration: import all modules needed
-import os
-import sys
-from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Text, Float, Boolean
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from datetime import date
+from sqlalchemy import Column, ForeignKey, Integer, String, Date, Float, Boolean
 
 
 # Configuration: Create instance of declarative base (class code will inherit this)
 Base = declarative_base()
+
 
 # Representation of the user database table as a python class.
 class User(Base):

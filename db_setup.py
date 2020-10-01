@@ -9,10 +9,6 @@ Note: Spotify credentials (Client ID and Client Secret) should be added as Syste
 '''
 
 import os
-import sys
-from sqlalchemy import Table, Column, ForeignKey, Integer, String, Date, Text, Float, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model import Base, Album, Artist, Playlist, Song, User, PlaylistItem
@@ -214,15 +210,16 @@ def populateDataManually():
     """Populates the database tables with dummy data.
     """
     # Populate starter data in the database
-    # Bind the engine to the metadata of the Base class (enables declaratives to be accessed through a DBSession instance)
+    # Bind the engine to the metadata of the Base class (enables declaratives to be accessed through a DBSession
+    # instance)
     Base.metadata.bind = engine
 
     DBSession = sessionmaker(bind=engine)
 
     # A DBSession() instance establishes all conversations with the database and represents a "staging zone"
     # for all the objects loaded into the database session object. Any change made against the objects in the
-    # session won't be persisted into the database until you call session.commit(). If you're not happy about the changes,
-    # you can revert all of them back to the last commit by calling session.rollback()
+    # session won't be persisted into the database until you call session.commit(). If you're not happy about the
+    # changes, you can revert all of them back to the last commit by calling session.rollback()
     session = DBSession()
 
     # Initial dummy data.
@@ -246,26 +243,36 @@ def populateDataManually():
     session.commit()
 
     song_objects = [
-        Song(uri="dummyuri", track_number=1, name="Heartsigh", popularity=100, duration=189000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=2, name="Bodyache", popularity=100, duration=179000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=3, name="Push Pull", popularity=100, duration=169000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=4, name="Repetition", popularity=100, duration=159000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=5, name="Stranger than Earth", popularity=100, duration=149000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=6, name="Begin Again", popularity=100, duration=139000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=7, name="Dust Hymn", popularity=100, duration=129000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=8, name="Flood on the Floor", popularity=100, duration=119000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=9, name="Sea Castle", popularity=100, duration=144000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1),
-        Song(uri="dummyuri", track_number=10, name="Stillness in Woe", popularity=100, duration=155000, danceability=1.0, explicit=False,
-             tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0, album_id=album1.id, album=album1)
+        Song(uri="dummyuri", track_number=1, name="Heartsigh", popularity=100, duration=189000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=2, name="Bodyache", popularity=100, duration=179000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=3, name="Push Pull", popularity=100, duration=169000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=4, name="Repetition", popularity=100, duration=159000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=5, name="Stranger than Earth", popularity=100, duration=149000,
+             danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100,
+             valence=1.0, album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=6, name="Begin Again", popularity=100, duration=139000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=7, name="Dust Hymn", popularity=100, duration=129000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=8, name="Flood on the Floor", popularity=100, duration=119000,
+             danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100,
+             valence=1.0, album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=9, name="Sea Castle", popularity=100, duration=144000, danceability=1.0,
+             explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100, valence=1.0,
+             album_id=album1.id, album=album1),
+        Song(uri="dummyuri", track_number=10, name="Stillness in Woe", popularity=100, duration=155000,
+             danceability=1.0, explicit=False, tempo=1.0, energy=1.0, instrumentalness=1.0, time_signature=100,
+             valence=1.0, album_id=album1.id, album=album1)
     ]
     session.add_all(song_objects)
     session.commit()
